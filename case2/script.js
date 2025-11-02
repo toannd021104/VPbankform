@@ -1,153 +1,112 @@
-// Use Case 2 - CRM Update Form Script (DB-only, no LocalStorage, no confirm on clear)
-
+// Wizard 3 bước - CRM Update Form
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("crmUpdateForm");
+  const panes = Array.from(document.querySelectorAll(".wizard-step-pane"));
+  const steps = Array.from(document.querySelectorAll(".wizard-step"));
+  const barFill = document.querySelector(".wizard-bar-fill");
   const clearBtn = document.getElementById("clearBtn");
-  const aiTestBtn = document.getElementById("aiTestBtn");
 
-  // Initialize common features
-  initializeCommonFeatures(form);
-
-  // Initialize AI Integration
-  const formAI = new FormAI("crmUpdateForm");
-
-  // Defaults: today & now
+  // Set default date and time
   const interactionDateField = document.getElementById("interactionDate");
-  if (interactionDateField)
-    interactionDateField.value = new Date().toISOString().split("T")[0];
-
   const interactionTimeField = document.getElementById("interactionTime");
-  (function setNow() {
-    if (!interactionTimeField) return;
+
+  if (interactionDateField && !interactionDateField.value) {
+    interactionDateField.value = new Date().toISOString().split("T")[0];
+  }
+
+  if (interactionTimeField && !interactionTimeField.value) {
     const now = new Date();
     interactionTimeField.value = `${String(now.getHours()).padStart(
       2,
       "0"
     )}:${String(now.getMinutes()).padStart(2, "0")}`;
-  })();
+  }
 
-  // Submit (giữ validateForm nếu bạn muốn chặn submit ở JS)
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    if (typeof validateForm === "function" && !validateForm(form)) {
-      showAlert("Vui lòng kiểm tra lại thông tin đã nhập", "error");
-      return;
-    }
-
-    const formData = getFormData(form);
-    showModal(
-      "Xác Nhận Cập Nhật",
-      "Bạn có chắc chắn muốn cập nhật thông tin CRM này không?",
-      () => {
-        console.log("Updating CRM:", formData);
-        showAlert("Thông tin CRM đã được cập nhật thành công!", "success");
-        form.reset();
-        if (interactionDateField)
-          interactionDateField.value = new Date().toISOString().split("T")[0];
-        if (interactionTimeField) {
-          const now = new Date();
-          interactionTimeField.value = `${String(now.getHours()).padStart(
-            2,
-            "0"
-          )}:${String(now.getMinutes()).padStart(2, "0")}`;
-        }
-      }
-    );
-  });
-
-  // Clear button — xóa ngay (KHÔNG xác nhận). Việc wipe Supabase làm trong block Supabase phía dưới.
-  clearBtn.addEventListener("click", function () {
-    if (typeof formAI?.resetForm === "function") formAI.resetForm();
-    form.reset();
-    if (interactionDateField)
-      interactionDateField.value = new Date().toISOString().split("T")[0];
-    if (interactionTimeField) {
-      const now = new Date();
-      interactionTimeField.value = `${String(now.getHours()).padStart(
-        2,
-        "0"
-      )}:${String(now.getMinutes()).padStart(2, "0")}`;
-    }
-    showAlert("Form đã được xóa", "info");
-    // Supabase wipe sẽ chạy ngay sau (được gắn listener dưới block Supabase)
-    document.dispatchEvent(new CustomEvent("crm:clear-clicked")); // tín hiệu cho block Supabase
-  });
-
-  // AI Test button - simulates AI filling the form
-  aiTestBtn.addEventListener("click", async function () {
-    const testData = {
-      customerName: "Nguyễn Văn Bình",
-      customerId: "CUS987654",
-      phoneNumber: "0912345678",
-      email: "nguyenvanbinh@example.com",
-      address: "25A Nguyễn Trãi, Phường Bến Thành, Quận 1, TP.HCM",
-      interactionType: "call",
-      interactionDate: new Date().toISOString().split("T")[0],
-      interactionTime: new Date().toTimeString().slice(0, 5),
-      duration: "5",
-      agentName: "Trần Thị Mai",
-      issueCategory: "account",
-      issueDescription: "Khách hàng yêu cầu cập nhật địa chỉ mới",
-      resolutionStatus: "resolved",
-      resolutionDetails: "Đã cập nhật địa chỉ mới vào hệ thống CRM",
-      satisfactionRating: "5",
-      followUpRequired: "no",
-    };
-
-    const result = formAI.fillForm(testData);
-    if (result.success) {
-      showAlert(
-        `AI đã điền thành công ${result.filledFields.length} trường`,
-        "success"
-      );
-    } else {
-      showAlert("Có lỗi khi AI điền form", "error");
-      console.error("AI Fill errors:", result.errors);
-    }
-  });
-
-  // Follow-up UX (KHÔNG đặt required runtime)
+  // Follow-up UX
   const followUpRequired = document.getElementById("followUpRequired");
   const followUpDate = document.getElementById("followUpDate");
-  followUpRequired?.addEventListener("change", function () {
-    if (this.value === "yes" && followUpDate) {
+
+  function handleFollowUp() {
+    if (followUpRequired?.value === "yes" && followUpDate) {
       const nextWeek = new Date();
       nextWeek.setDate(nextWeek.getDate() + 7);
       followUpDate.value = nextWeek.toISOString().split("T")[0];
     } else if (followUpDate) {
       followUpDate.value = "";
     }
-  });
-});
-
-// Expose FormAI instance for external AI service integration
-window.crmFormAI = null;
-document.addEventListener("DOMContentLoaded", function () {
-  window.crmFormAI = new FormAI("crmUpdateForm");
-});
-
-// === Shared State Sync (Supabase) — Case 2 CRM (DB-only) ===
-(function () {
-  if (typeof window === "undefined") return;
-  if (!window.supabase || typeof window.supabase.createClient !== "function") {
-    console.error("[Supabase] SDK not loaded.");
-    return;
   }
-  const SB_URL = window.__SB_URL__;
-  const SB_ANON = window.__SB_ANON__;
+
+  let current = 1;
+  const total = panes.length;
+
+  function setStep(n) {
+    current = Math.max(1, Math.min(total, n));
+    panes.forEach((p) =>
+      p.classList.toggle("is-hidden", Number(p.dataset.step) !== current)
+    );
+    steps.forEach((s) => {
+      const st = Number(s.dataset.step);
+      s.classList.toggle("is-active", st === current);
+      s.classList.toggle("is-done", st < current);
+    });
+    const pct = Math.round((current / total) * 100);
+    if (barFill) barFill.style.width = `${pct}%`;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Điều hướng tức thì
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".wizard-next")) setStep(current + 1);
+    if (e.target.closest(".wizard-prev")) setStep(current - 1);
+  });
+
+  // Submit ngay lập tức, không chặn, không hỏi
+  form.addEventListener("submit", () => {
+    // cho phép submit mặc định
+  });
+
+  // Wire follow-up event
+  if (followUpRequired) {
+    followUpRequired.addEventListener("change", handleFollowUp);
+  }
+
+  setStep(1);
+});
+
+// ===== Supabase Shared State =====
+(function () {
+  const FORM_ID = "crmUpdateForm";
   const TABLE = window.__TABLE__ || "crm_forms";
   const ROW_ID = window.__ROW_ID__ || "vpbank_crm_update_shared_form";
-  const client = window.supabase.createClient(SB_URL, SB_ANON);
+  const SB_URL = window.__SB_URL__;
+  const SB_KEY = window.__SB_ANON__;
+  const SAVE_MS = 300;
 
-  // Prefer #crmUpdateForm; fallback to first <form>
-  let form =
-    document.getElementById("crmUpdateForm") || document.querySelector("form");
-  if (!form) {
-    console.warn("[Supabase] No form found");
+  const form = document.getElementById(FORM_ID);
+  const clearBtn = document.getElementById("clearBtn");
+
+  if (!form) return;
+  if (!window.supabase || !SB_URL || !SB_KEY) {
+    console.warn("[Supabase] SDK/Config missing");
     return;
   }
+  const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
+  // Follow-up UX
+  const followUpRequired = document.getElementById("followUpRequired");
+  const followUpDate = document.getElementById("followUpDate");
+
+  function handleFollowUp() {
+    if (followUpRequired?.value === "yes" && followUpDate) {
+      const nextWeek = new Date();
+      nextWeek.setDate(nextWeek.getDate() + 7);
+      followUpDate.value = nextWeek.toISOString().split("T")[0];
+    } else if (followUpDate) {
+      followUpDate.value = "";
+    }
+  }
+
+  // Serialize/restore helpers
   function isSavable(el) {
     if (!el || el.disabled) return false;
     const t = (el.type || "").toLowerCase();
@@ -158,30 +117,33 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   const keyOf = (el) => el.name || el.id;
 
-  function serializeAll() {
+  function serializeForm() {
     const values = {};
     const fields = Array.from(form.elements).filter(isSavable);
-    const radioGroupsHandled = new Set();
+    const radioHandled = new Set();
+
     fields.forEach((el) => {
-      const name = keyOf(el);
-      if (!name) return;
+      const k = keyOf(el);
+      if (!k) return; // Sửa từ 'continue' thành 'return' cho forEach
+
       if (el.type === "radio") {
-        if (radioGroupsHandled.has(name)) return;
-        radioGroupsHandled.add(name);
+        if (radioHandled.has(k)) return;
+        radioHandled.add(k);
         const checked = form.querySelector(
-          `input[type="radio"][name="${CSS.escape(name)}"]:checked`
+          `input[type="radio"][name="${CSS.escape(k)}"]:checked`
         );
-        values[name] = checked ? checked.value : "";
+        values[k] = checked ? checked.value : "";
       } else if (el.type === "checkbox") {
-        values[name] = !!el.checked;
+        values[k] = !!el.checked;
       } else if (el.tagName === "SELECT" && el.multiple) {
-        values[name] = Array.from(el.options)
+        values[k] = Array.from(el.options)
           .filter((o) => o.selected)
           .map((o) => o.value);
       } else {
-        values[name] = el.value ?? "";
+        values[k] = el.value ?? "";
       }
     });
+
     return values;
   }
 
@@ -193,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       if (!nodes.length) return;
       const first = nodes[0];
+
       if (first.type === "radio") {
         nodes.forEach((el) => {
           el.checked = el.value === value;
@@ -211,19 +174,21 @@ document.addEventListener("DOMContentLoaded", function () {
         nodes.forEach((el) => (el.value = value ?? ""));
       }
     });
+    handleFollowUp();
   }
 
-  // initial load
+  // Initial load from DB
   (async function initialLoad() {
-    const { data, error } = await client
+    const { data, error } = await sb
       .from(TABLE)
       .select("data")
       .eq("id", ROW_ID)
       .maybeSingle();
     if (!error && data && data.data) applyToForm(data.data);
+    handleFollowUp();
   })();
 
-  // debounce save
+  // Debounced upsert
   let saveTimer = null,
     isLocal = false,
     last = 0;
@@ -234,10 +199,10 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const payload = {
         id: ROW_ID,
-        data: serializeAll(),
+        data: serializeForm(),
         updated_at: new Date().toISOString(),
       };
-      const { error } = await client
+      const { error } = await sb
         .from(TABLE)
         .upsert(payload, { onConflict: "id" });
       if (error) console.error("[Supabase] upsert error:", error);
@@ -248,18 +213,67 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   function schedule() {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(upsertNow, 300);
+    saveTimer = setTimeout(upsertNow, SAVE_MS);
   }
-  form.addEventListener("input", schedule, true);
-  form.addEventListener("change", schedule, true);
-  form.addEventListener("submit", schedule, true);
 
-  // clear — KHÔNG xác nhận: reset UI + upsert {}
-  document.addEventListener("crm:clear-clicked", async () => {
+  // Wire events
+  form.addEventListener("input", schedule, true);
+  form.addEventListener(
+    "change",
+    (e) => {
+      if (e.target === followUpRequired) handleFollowUp();
+      schedule();
+    },
+    true
+  );
+
+  // Submit = không post đâu cả, chỉ log & ensure save
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    schedule();
+    console.log("[CRM] submit payload:", serializeForm());
+  });
+
+  // Clear = reset UI + wipe DB (no modal)
+  clearBtn?.addEventListener("click", async () => {
+    form.reset();
+
+    // Reset về step 1
+    const panes = Array.from(document.querySelectorAll(".wizard-step-pane"));
+    const steps = Array.from(document.querySelectorAll(".wizard-step"));
+    const barFill = document.querySelector(".wizard-bar-fill");
+
+    panes.forEach((p, index) => {
+      p.classList.toggle("is-hidden", index !== 0);
+    });
+    steps.forEach((s, index) => {
+      s.classList.toggle("is-active", index === 0);
+      s.classList.toggle("is-done", false);
+    });
+    if (barFill) barFill.style.width = "33%";
+
+    // Set default date and time
+    const interactionDateField = document.getElementById("interactionDate");
+    const interactionTimeField = document.getElementById("interactionTime");
+
+    if (interactionDateField) {
+      interactionDateField.value = new Date().toISOString().split("T")[0];
+    }
+
+    if (interactionTimeField) {
+      const now = new Date();
+      interactionTimeField.value = `${String(now.getHours()).padStart(
+        2,
+        "0"
+      )}:${String(now.getMinutes()).padStart(2, "0")}`;
+    }
+
+    handleFollowUp();
+
     try {
       isLocal = true;
     } catch {}
-    await client
+    await sb
       .from(TABLE)
       .upsert(
         { id: ROW_ID, data: {}, updated_at: new Date().toISOString() },
@@ -269,9 +283,9 @@ document.addEventListener("DOMContentLoaded", function () {
     isLocal = false;
   });
 
-  // realtime
-  const ch = client
-    .channel("realtime:" + TABLE + ":" + ROW_ID)
+  // Realtime sync
+  const ch = sb
+    .channel(`realtime:${TABLE}:${ROW_ID}`)
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: TABLE, filter: `id=eq.${ROW_ID}` },
@@ -286,11 +300,9 @@ document.addEventListener("DOMContentLoaded", function () {
     )
     .subscribe();
 
-  // cleanup
   window.addEventListener("beforeunload", () => {
     try {
-      client.removeChannel(ch);
+      sb.removeChannel(ch);
     } catch {}
   });
 })();
-// === End Shared State Sync ===

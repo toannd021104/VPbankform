@@ -1,4 +1,68 @@
-// Use Case 4 - Compliance Reporting (DB-only sync, no localStorage, no modal)
+// Wizard 3 bước - Compliance Reporting
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("complianceForm");
+  const panes = Array.from(document.querySelectorAll(".wizard-step-pane"));
+  const steps = Array.from(document.querySelectorAll(".wizard-step"));
+  const barFill = document.querySelector(".wizard-bar-fill");
+  const clearBtn = document.getElementById("clearBtn");
+
+  // UI dependencies
+  const violationsFound = document.getElementById("violationsFound");
+  const violationDetailsGroup = document.getElementById(
+    "violationDetailsGroup"
+  );
+  const followUpRequired = document.getElementById("followUpRequired");
+  const followUpDateGroup = document.getElementById("followUpDateGroup");
+
+  function toggleDeps() {
+    violationDetailsGroup.style.display =
+      violationsFound.value === "minor" || violationsFound.value === "major"
+        ? "block"
+        : "none";
+    followUpDateGroup.style.display =
+      followUpRequired.value === "yes" ? "block" : "none";
+  }
+
+  let current = 1;
+  const total = panes.length;
+
+  function setStep(n) {
+    current = Math.max(1, Math.min(total, n));
+    panes.forEach((p) =>
+      p.classList.toggle("is-hidden", Number(p.dataset.step) !== current)
+    );
+    steps.forEach((s) => {
+      const st = Number(s.dataset.step);
+      s.classList.toggle("is-active", st === current);
+      s.classList.toggle("is-done", st < current);
+    });
+    const pct = Math.round((current / total) * 100);
+    if (barFill) barFill.style.width = `${pct}%`;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Điều hướng tức thì
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".wizard-next")) setStep(current + 1);
+    if (e.target.closest(".wizard-prev")) setStep(current - 1);
+  });
+
+  // Submit ngay lập tức, không chặn, không hỏi
+  form.addEventListener("submit", () => {
+    // cho phép submit mặc định
+  });
+
+  // Wire UI dependency events
+  form.addEventListener("change", (e) => {
+    if (e.target === violationsFound || e.target === followUpRequired)
+      toggleDeps();
+  });
+
+  setStep(1);
+  toggleDeps();
+});
+
+// ===== Supabase Shared State =====
 (function () {
   const FORM_ID = "complianceForm";
   const TABLE = window.__TABLE__ || "compliance_forms";

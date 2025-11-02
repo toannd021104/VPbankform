@@ -77,10 +77,6 @@ label {
   margin-bottom: 8px;
   color: var(--text-color);
 }
-label .required {
-  color: var(--error-color);
-  margin-left: 4px;
-}
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -143,7 +139,55 @@ button {
 .btn-secondary:hover {
   background: #e5e5e5;
 }
+
+/* ---- Wizard (3 bước) ---- */
+.wizard-progress {
+  margin-bottom: 16px;
+}
+.wizard-steps {
+  display: flex;
+  gap: 8px;
+}
+.wizard-step {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f2f4f7;
+  font-weight: 600;
+  opacity: 0.6;
+}
+.wizard-step.is-active,
+.wizard-step.is-done {
+  opacity: 1;
+  background: #e6f4ff;
+}
+.wizard-bar {
+  height: 6px;
+  background: #eef2f6;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.wizard-bar-fill {
+  height: 100%;
+  background: #1677ff;
+  width: 0;
+  transition: width 0.25s ease;
+}
+
+.wizard-step-pane.is-hidden {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  .vpbank-form {
+    padding: 20px;
+  }
+  .form-header h1 {
+    font-size: 24px;
+  }
   .form-row {
     grid-template-columns: 1fr;
   }

@@ -8,249 +8,365 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script>
-      window.__SB_URL__  = window.__SB_URL__  || "https://hjoislprylonxnmawbwo.supabase.co";
-      window.__SB_ANON__ = window.__SB_ANON__ || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqb2lzbHByeWxvbnhubWF3YndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MDA2MzIsImV4cCI6MjA3NzQ3NjYzMn0._ZzZBYxpynKTM_Xw8-Jf8Wi53cJiTeE92u86osLIhEE";
-      window.__TABLE__   = window.__TABLE__   || "operations_forms";
-      window.__ROW_ID__  = window.__ROW_ID__  || "use-case-5-operations-validation";
+      window.__SB_URL__ =
+        window.__SB_URL__ || "https://hjoislprylonxnmawbwo.supabase.co";
+      window.__SB_ANON__ =
+        window.__SB_ANON__ ||
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqb2lzbHByeWxvbnhubWF3YndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MDA2MzIsImV4cCI6MjA3NzQ3NjYzMn0._ZzZBYxpynKTM_Xw8-Jf8Wi53cJiTeE92u86osLIhEE";
+      window.__TABLE__ = window.__TABLE__ || "operations_forms";
+      window.__ROW_ID__ =
+        window.__ROW_ID__ || "use-case-5-operations-validation";
     </script>
   </head>
   <body>
     <div class="container">
+      <!-- Progress -->
+      <div class="wizard-progress">
+        <div class="wizard-steps">
+          <div class="wizard-step is-active" data-step="1">
+            1. Thông Tin Giao Dịch
+          </div>
+          <div class="wizard-step" data-step="2">2. Kiểm Tra & Đối Soát</div>
+          <div class="wizard-step" data-step="3">3. Xác Nhận & Gửi</div>
+        </div>
+        <div class="wizard-bar">
+          <div class="wizard-bar-fill" style="width: 33%"></div>
+        </div>
+      </div>
+
       <form id="operationsForm" class="vpbank-form" novalidate>
         <div class="form-header">
           <h1>Kiểm Tra & Xác Thực Giao Dịch</h1>
           <p>Hệ thống vận hành - Operations</p>
         </div>
 
-        <div class="form-section">
-          <h2>Thông Tin Khách Hàng</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="customerName">Họ và Tên</label>
-              <input type="text" id="customerName" name="customerName" />
+        <!-- STEP 1: Thông Tin Giao Dịch -->
+        <section class="wizard-step-pane" data-step="1">
+          <div class="form-section">
+            <h2>Thông Tin Khách Hàng</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customerName">Họ và Tên</label>
+                <input type="text" id="customerName" name="customerName" />
+              </div>
+              <div class="form-group">
+                <label for="customerId">Mã Khách Hàng</label>
+                <input type="text" id="customerId" name="customerId" />
+              </div>
             </div>
-            <div class="form-group">
-              <label for="customerId">Mã Khách Hàng</label>
-              <input type="text" id="customerId" name="customerId" />
+            <div class="form-row">
+              <div class="form-group">
+                <label for="accountNumber">Số Tài Khoản</label>
+                <input type="text" id="accountNumber" name="accountNumber" />
+              </div>
+              <div class="form-group">
+                <label for="phoneNumber">Số Điện Thoại</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" />
+              </div>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="accountNumber">Số Tài Khoản</label>
-              <input type="text" id="accountNumber" name="accountNumber" />
-            </div>
-            <div class="form-group">
-              <label for="phoneNumber">Số Điện Thoại</label>
-              <input type="tel" id="phoneNumber" name="phoneNumber" />
-            </div>
-          </div>
-        </div>
 
-        <div class="form-section">
-          <h2>Thông Tin Giao Dịch</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="transactionId">Mã Giao Dịch</label>
-              <input type="text" id="transactionId" name="transactionId" />
+          <div class="form-section">
+            <h2>Thông Tin Giao Dịch</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="transactionId">Mã Giao Dịch</label>
+                <input type="text" id="transactionId" name="transactionId" />
+              </div>
+              <div class="form-group">
+                <label for="transactionDate">Ngày Giao Dịch</label>
+                <input
+                  type="date"
+                  id="transactionDate"
+                  name="transactionDate"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="transactionTime">Thời Gian Giao Dịch</label>
+                <input
+                  type="time"
+                  id="transactionTime"
+                  name="transactionTime"
+                />
+              </div>
+              <div class="form-group">
+                <label for="transactionAmount">Số Tiền (VNĐ)</label>
+                <input
+                  type="number"
+                  id="transactionAmount"
+                  name="transactionAmount"
+                  min="0"
+                  step="1000"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="transactionType">Loại Giao Dịch</label>
+                <select id="transactionType" name="transactionType">
+                  <option value="">-- Chọn loại giao dịch --</option>
+                  <option value="deposit">Gửi tiền</option>
+                  <option value="withdrawal">Rút tiền</option>
+                  <option value="transfer">Chuyển khoản</option>
+                  <option value="payment">Thanh toán</option>
+                  <option value="loan-disbursement">Giải ngân vay</option>
+                  <option value="loan-payment">Trả nợ vay</option>
+                  <option value="fee">Thu phí</option>
+                  <option value="refund">Hoàn tiền</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="channel">Kênh Giao Dịch</label>
+                <select id="channel" name="channel">
+                  <option value="">-- Chọn kênh --</option>
+                  <option value="branch">Chi nhánh</option>
+                  <option value="atm">ATM</option>
+                  <option value="online">Online Banking</option>
+                  <option value="mobile">Mobile Banking</option>
+                  <option value="pos">POS</option>
+                  <option value="agent">Điểm giao dịch</option>
+                </select>
+              </div>
             </div>
             <div class="form-group">
-              <label for="transactionDate">Ngày Giao Dịch</label>
-              <input type="date" id="transactionDate" name="transactionDate" />
+              <label for="transactionDescription">Mô Tả Giao Dịch</label>
+              <textarea
+                id="transactionDescription"
+                name="transactionDescription"
+                placeholder="Nội dung, diễn giải giao dịch..."
+              ></textarea>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="transactionTime">Thời Gian Giao Dịch</label>
-              <input type="time" id="transactionTime" name="transactionTime" />
-            </div>
-            <div class="form-group">
-              <label for="transactionAmount">Số Tiền (VNĐ)</label>
-              <input type="number" id="transactionAmount" name="transactionAmount" min="0" step="1000" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="transactionType">Loại Giao Dịch</label>
-              <select id="transactionType" name="transactionType">
-                <option value="">-- Chọn loại giao dịch --</option>
-                <option value="deposit">Gửi tiền</option>
-                <option value="withdrawal">Rút tiền</option>
-                <option value="transfer">Chuyển khoản</option>
-                <option value="payment">Thanh toán</option>
-                <option value="loan-disbursement">Giải ngân vay</option>
-                <option value="loan-payment">Trả nợ vay</option>
-                <option value="fee">Thu phí</option>
-                <option value="refund">Hoàn tiền</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="channel">Kênh Giao Dịch</label>
-              <select id="channel" name="channel">
-                <option value="">-- Chọn kênh --</option>
-                <option value="branch">Chi nhánh</option>
-                <option value="atm">ATM</option>
-                <option value="online">Online Banking</option>
-                <option value="mobile">Mobile Banking</option>
-                <option value="pos">POS</option>
-                <option value="agent">Điểm giao dịch</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="transactionDescription">Mô Tả Giao Dịch</label>
-            <textarea id="transactionDescription" name="transactionDescription" placeholder="Nội dung, diễn giải giao dịch..."></textarea>
-          </div>
-        </div>
 
-        <div class="form-section" id="beneficiarySection" style="display:none">
-          <h2>Thông Tin Người Nhận</h2>
-          <div class="form-group">
-            <label for="beneficiaryName">Tên Người Nhận</label>
-            <input type="text" id="beneficiaryName" name="beneficiaryName" />
-          </div>
-          <div class="form-row">
+          <div
+            class="form-section"
+            id="beneficiarySection"
+            style="display: none"
+          >
+            <h2>Thông Tin Người Nhận</h2>
             <div class="form-group">
-              <label for="beneficiaryAccount">Số Tài Khoản Người Nhận</label>
-              <input type="text" id="beneficiaryAccount" name="beneficiaryAccount" />
+              <label for="beneficiaryName">Tên Người Nhận</label>
+              <input type="text" id="beneficiaryName" name="beneficiaryName" />
             </div>
-            <div class="form-group">
-              <label for="beneficiaryBank">Ngân Hàng</label>
-              <input type="text" id="beneficiaryBank" name="beneficiaryBank" />
+            <div class="form-row">
+              <div class="form-group">
+                <label for="beneficiaryAccount">Số Tài Khoản Người Nhận</label>
+                <input
+                  type="text"
+                  id="beneficiaryAccount"
+                  name="beneficiaryAccount"
+                />
+              </div>
+              <div class="form-group">
+                <label for="beneficiaryBank">Ngân Hàng</label>
+                <input
+                  type="text"
+                  id="beneficiaryBank"
+                  name="beneficiaryBank"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="form-section">
-          <h2>Trạng Thái Giao Dịch</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="status">Trạng Thái</label>
-              <select id="status" name="status">
-                <option value="">-- Chọn trạng thái --</option>
-                <option value="pending">Đang xử lý</option>
-                <option value="completed">Hoàn thành</option>
-                <option value="failed">Thất bại</option>
-                <option value="cancelled">Đã hủy</option>
-                <option value="reversed">Đã đảo ngược</option>
-              </select>
+          <div class="form-actions">
+            <button type="button" class="btn-primary wizard-next">
+              Tiếp tục
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 2: Kiểm Tra & Đối Soát -->
+        <section class="wizard-step-pane is-hidden" data-step="2">
+          <div class="form-section">
+            <h2>Trạng Thái Giao Dịch</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="status">Trạng Thái</label>
+                <select id="status" name="status">
+                  <option value="">-- Chọn trạng thái --</option>
+                  <option value="pending">Đang xử lý</option>
+                  <option value="completed">Hoàn thành</option>
+                  <option value="failed">Thất bại</option>
+                  <option value="cancelled">Đã hủy</option>
+                  <option value="reversed">Đã đảo ngược</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="processingSystem">Hệ Thống Xử Lý</label>
+                <select id="processingSystem" name="processingSystem">
+                  <option value="">-- Chọn --</option>
+                  <option value="core-banking">Core Banking</option>
+                  <option value="payment-gateway">Payment Gateway</option>
+                  <option value="napas">NAPAS</option>
+                  <option value="swift">SWIFT</option>
+                  <option value="other">Khác</option>
+                </select>
+              </div>
+            </div>
+            <div
+              class="form-group"
+              id="failureReasonGroup"
+              style="display: none"
+            >
+              <label for="failureReason">Lý Do Thất Bại</label>
+              <textarea id="failureReason" name="failureReason"></textarea>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Kiểm Tra & Đối Soát</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="validationResult">Kết Quả Kiểm Tra</label>
+                <select id="validationResult" name="validationResult">
+                  <option value="">-- Chọn kết quả --</option>
+                  <option value="valid">Hợp lệ</option>
+                  <option value="invalid">Không hợp lệ</option>
+                  <option value="needs-review">Cần xem xét</option>
+                  <option value="suspicious">Nghi ngờ</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="reviewerName">Người Kiểm Tra</label>
+                <input type="text" id="reviewerName" name="reviewerName" />
+              </div>
             </div>
             <div class="form-group">
-              <label for="processingSystem">Hệ Thống Xử Lý</label>
-              <select id="processingSystem" name="processingSystem">
+              <label for="reviewDate">Ngày Kiểm Tra</label>
+              <input type="date" id="reviewDate" name="reviewDate" />
+            </div>
+            <div
+              class="form-group"
+              id="validationIssuesGroup"
+              style="display: none"
+            >
+              <label for="validationIssues">Vấn Đề Phát Hiện</label>
+              <textarea
+                id="validationIssues"
+                name="validationIssues"
+                placeholder="Mô tả các vấn đề hoặc bất thường phát hiện..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Kiểm Tra Số Dư</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="balanceBefore">Số Dư Trước Giao Dịch (VNĐ)</label>
+                <input
+                  type="number"
+                  id="balanceBefore"
+                  name="balanceBefore"
+                  min="0"
+                  step="1000"
+                />
+              </div>
+              <div class="form-group">
+                <label for="balanceAfter">Số Dư Sau Giao Dịch (VNĐ)</label>
+                <input
+                  type="number"
+                  id="balanceAfter"
+                  name="balanceAfter"
+                  min="0"
+                  step="1000"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="balanceStatus">Trạng Thái Đối Soát</label>
+              <select id="balanceStatus" name="balanceStatus">
                 <option value="">-- Chọn --</option>
-                <option value="core-banking">Core Banking</option>
-                <option value="payment-gateway">Payment Gateway</option>
-                <option value="napas">NAPAS</option>
-                <option value="swift">SWIFT</option>
-                <option value="other">Khác</option>
+                <option value="matched">Khớp</option>
+                <option value="mismatched">Không khớp</option>
+                <option value="pending">Đang kiểm tra</option>
               </select>
             </div>
           </div>
-          <div class="form-group" id="failureReasonGroup" style="display:none">
-            <label for="failureReason">Lý Do Thất Bại</label>
-            <textarea id="failureReason" name="failureReason"></textarea>
-          </div>
-        </div>
 
-        <div class="form-section">
-          <h2>Kiểm Tra & Đối Soát</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="validationResult">Kết Quả Kiểm Tra</label>
-              <select id="validationResult" name="validationResult">
-                <option value="">-- Chọn kết quả --</option>
-                <option value="valid">Hợp lệ</option>
-                <option value="invalid">Không hợp lệ</option>
-                <option value="needs-review">Cần xem xét</option>
-                <option value="suspicious">Nghi ngờ</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="reviewerName">Người Kiểm Tra</label>
-              <input type="text" id="reviewerName" name="reviewerName" />
-            </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary wizard-prev">
+              Quay lại
+            </button>
+            <button type="button" class="btn-primary wizard-next">
+              Tiếp tục
+            </button>
           </div>
-          <div class="form-group">
-            <label for="reviewDate">Ngày Kiểm Tra</label>
-            <input type="date" id="reviewDate" name="reviewDate" />
-          </div>
-          <div class="form-group" id="validationIssuesGroup" style="display:none">
-            <label for="validationIssues">Vấn Đề Phát Hiện</label>
-            <textarea id="validationIssues" name="validationIssues" placeholder="Mô tả các vấn đề hoặc bất thường phát hiện..."></textarea>
-          </div>
-        </div>
+        </section>
 
-        <div class="form-section">
-          <h2>Kiểm Tra Số Dư</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="balanceBefore">Số Dư Trước Giao Dịch (VNĐ)</label>
-              <input type="number" id="balanceBefore" name="balanceBefore" min="0" step="1000" />
+        <!-- STEP 3: Xác Nhận & Gửi -->
+        <section class="wizard-step-pane is-hidden" data-step="3">
+          <div class="form-section">
+            <h2>Phát Hiện Gian Lận</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fraudScore">Điểm Rủi Ro (0-100)</label>
+                <input
+                  type="number"
+                  id="fraudScore"
+                  name="fraudScore"
+                  min="0"
+                  max="100"
+                />
+              </div>
+              <div class="form-group">
+                <label for="fraudIndicators">Dấu Hiệu Bất Thường</label>
+                <select id="fraudIndicators" name="fraudIndicators">
+                  <option value="">-- Chọn --</option>
+                  <option value="none">Không có</option>
+                  <option value="velocity">Tần suất cao</option>
+                  <option value="amount">Số tiền bất thường</option>
+                  <option value="location">Vị trí lạ</option>
+                  <option value="pattern">Mẫu giao dịch lạ</option>
+                  <option value="multiple">Nhiều dấu hiệu</option>
+                </select>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="balanceAfter">Số Dư Sau Giao Dịch (VNĐ)</label>
-              <input type="number" id="balanceAfter" name="balanceAfter" min="0" step="1000" />
+            <div
+              class="form-group"
+              id="fraudDetailsGroup"
+              style="display: none"
+            >
+              <label for="fraudDetails">Chi Tiết Dấu Hiệu Gian Lận</label>
+              <textarea id="fraudDetails" name="fraudDetails"></textarea>
             </div>
           </div>
-          <div class="form-group">
-            <label for="balanceStatus">Trạng Thái Đối Soát</label>
-            <select id="balanceStatus" name="balanceStatus">
-              <option value="">-- Chọn --</option>
-              <option value="matched">Khớp</option>
-              <option value="mismatched">Không khớp</option>
-              <option value="pending">Đang kiểm tra</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="form-section">
-          <h2>Phát Hiện Gian Lận</h2>
-          <div class="form-row">
+          <div class="form-section">
+            <h2>Ghi Chú</h2>
             <div class="form-group">
-              <label for="fraudScore">Điểm Rủi Ro (0-100)</label>
-              <input type="number" id="fraudScore" name="fraudScore" min="0" max="100" />
+              <label for="notes">Ghi Chú Kiểm Tra</label>
+              <textarea
+                id="notes"
+                name="notes"
+                placeholder="Các thông tin bổ sung, nhận xét về giao dịch..."
+              ></textarea>
             </div>
             <div class="form-group">
-              <label for="fraudIndicators">Dấu Hiệu Bất Thường</label>
-              <select id="fraudIndicators" name="fraudIndicators">
-                <option value="">-- Chọn --</option>
-                <option value="none">Không có</option>
-                <option value="velocity">Tần suất cao</option>
-                <option value="amount">Số tiền bất thường</option>
-                <option value="location">Vị trí lạ</option>
-                <option value="pattern">Mẫu giao dịch lạ</option>
-                <option value="multiple">Nhiều dấu hiệu</option>
-              </select>
+              <label for="actionRequired">Hành Động Cần Thiết</label>
+              <textarea
+                id="actionRequired"
+                name="actionRequired"
+                placeholder="Các bước tiếp theo cần thực hiện..."
+              ></textarea>
             </div>
           </div>
-          <div class="form-group" id="fraudDetailsGroup" style="display:none">
-            <label for="fraudDetails">Chi Tiết Dấu Hiệu Gian Lận</label>
-            <textarea id="fraudDetails" name="fraudDetails"></textarea>
-          </div>
-        </div>
 
-        <div class="form-section">
-          <h2>Ghi Chú</h2>
-          <div class="form-group">
-            <label for="notes">Ghi Chú Kiểm Tra</label>
-            <textarea id="notes" name="notes" placeholder="Các thông tin bổ sung, nhận xét về giao dịch..."></textarea>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="clearBtn">
+              Xóa Form
+            </button>
+            <button type="button" class="btn-secondary wizard-prev">
+              Quay lại
+            </button>
+            <button type="submit" class="btn-primary">Xác Nhận Kiểm Tra</button>
           </div>
-          <div class="form-group">
-            <label for="actionRequired">Hành Động Cần Thiết</label>
-            <textarea id="actionRequired" name="actionRequired" placeholder="Các bước tiếp theo cần thực hiện..."></textarea>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" id="clearBtn">Xóa Form</button>
-          <button type="button" class="btn-secondary" id="aiTestBtn">Test AI</button>
-          <button type="submit" class="btn-primary">Xác Nhận Kiểm Tra</button>
-        </div>
+        </section>
       </form>
     </div>
 
-    <script src="../shared/utils.js"></script>
-    <script src="../shared/ai-integration.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

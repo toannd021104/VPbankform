@@ -1,140 +1,68 @@
-// Use Case 1 - Loan Origination Form Script
-
+// Wizard 3 bước — không modal, không required, hành động tức thì
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("loanOriginationForm");
+  const panes = Array.from(document.querySelectorAll(".wizard-step-pane"));
+  const steps = Array.from(document.querySelectorAll(".wizard-step"));
+  const barFill = document.querySelector(".wizard-bar-fill");
   const clearBtn = document.getElementById("clearBtn");
-  const aiTestBtn = document.getElementById("aiTestBtn");
 
-  // Initialize common features
-  initializeCommonFeatures(form);
-
-  // Initialize AI Integration
-  const formAI = new FormAI("loanOriginationForm");
-
-  // Set default application date to today
+  // Đặt ngày đăng ký mặc định = hôm nay nếu trống
   const applicationDateField = document.getElementById("applicationDate");
-  applicationDateField.value = new Date().toISOString().split("T")[0];
+  if (applicationDateField && !applicationDateField.value) {
+    applicationDateField.value = new Date().toISOString().split("T")[0];
+  }
 
-  // Form submission (giữ validate JS nếu bạn đang dùng)
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  let current = 1;
+  const total = panes.length;
 
-    if (!validateForm(form)) {
-      showAlert("Vui lòng kiểm tra lại thông tin đã nhập", "error");
-      return;
-    }
-
-    const formData = getFormData(form);
-
-    showModal(
-      "Xác Nhận Gửi Đơn",
-      "Bạn có chắc chắn muốn gửi đơn vay vốn này không?",
-      () => {
-        // Simulate submission (tùy bạn nối API thật)
-        console.log("Submitting loan application:", formData);
-        showAlert("Đơn vay đã được gửi thành công!", "success");
-        form.reset();
-        applicationDateField.value = new Date().toISOString().split("T")[0];
-      }
+  function setStep(n) {
+    current = Math.max(1, Math.min(total, n));
+    panes.forEach((p) =>
+      p.classList.toggle("is-hidden", Number(p.dataset.step) !== current)
     );
-  });
-
-  // Clear button — reset UI ngay lập tức, sau đó wipe trong Supabase (ở block Supabase phía dưới)
-  clearBtn.addEventListener("click", function () {
-    showModal(
-      "Xác Nhận Xóa",
-      "Bạn có chắc chắn muốn xóa toàn bộ thông tin đã nhập không?",
-      () => {
-        formAI.resetForm();
-        applicationDateField.value = new Date().toISOString().split("T")[0];
-        showAlert("Form đã được xóa", "info");
-      }
-    );
-  });
-
-  // AI Test button - simulates AI filling the form
-  aiTestBtn.addEventListener("click", async function () {
-    const testData = {
-      customerName: "Nguyễn Văn An",
-      customerId: "001234567890",
-      phoneNumber: "0901234567",
-      email: "nguyenvanan@example.com",
-      address: "123 Nguyễn Trãi, Phường Bến Thành, Quận 1, TP.HCM",
-      dateOfBirth: "1990-05-15",
-      gender: "male",
-      loanAmount: "500000000",
-      loanTerm: "24",
-      loanPurpose: "personal",
-      applicationDate: new Date().toISOString().split("T")[0],
-      employmentStatus: "employed",
-      companyName: "Công ty ABC",
-      monthlyIncome: "25000000",
-      workAddress: "456 Lê Lợi, Quận 1, TP.HCM",
-      collateralType: "real-estate",
-      collateralValue: "800000000",
-      collateralDescription: "Căn hộ chung cư 80m2 tại Quận 1",
-    };
-
-    const result = formAI.fillForm(testData);
-
-    if (result.success) {
-      showAlert(
-        `AI đã điền thành công ${result.filledFields.length} trường`,
-        "success"
-      );
-    } else {
-      showAlert("Có lỗi khi AI điền form", "error");
-      console.error("AI Fill errors:", result.errors);
-    }
-  });
-
-  // Format currency inputs on blur
-  const currencyInputs = ["loanAmount", "monthlyIncome", "collateralValue"];
-  currencyInputs.forEach((inputId) => {
-    const input = document.getElementById(inputId);
-    input.addEventListener("blur", function () {
-      if (this.value) {
-        console.log(`Amount entered: ${formatCurrency(this.value)}`);
-      }
+    steps.forEach((s) => {
+      const st = Number(s.dataset.step);
+      s.classList.toggle("is-active", st === current);
+      s.classList.toggle("is-done", st < current);
     });
-  });
+    const pct = Math.round((current / total) * 100);
+    if (barFill) barFill.style.width = `${pct}%`;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-  // Update collateral fields — KHÔNG đặt required để đúng yêu cầu "bỏ ràng buộc"
-  const collateralType = document.getElementById("collateralType");
-  const collateralValue = document.getElementById("collateralValue");
-  const collateralDescription = document.getElementById(
-    "collateralDescription"
-  );
-
-  collateralType.addEventListener("change", function () {
-    if (this.value === "none") {
-      collateralValue.value = "";
-      collateralDescription.value = "";
-    } else {
-      // Không chèn required
+  // Điều hướng tức thì
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".wizard-next")) setStep(current + 1);
+    if (e.target.closest(".wizard-prev")) setStep(current - 1);
+    if (e.target.closest("#clearBtn")) {
+      form.reset();
+      form.querySelectorAll("textarea").forEach((el) => (el.value = ""));
+      form.querySelectorAll("select").forEach((el) => {
+        if (el.querySelector('option[value=""]')) el.value = "";
+      });
+      if (applicationDateField)
+        applicationDateField.value = new Date().toISOString().split("T")[0];
+      setStep(1);
+      // Đồng bộ Supabase (nếu có) — phát sự kiện change để các listener khác bắt được
+      document.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
+
+  // Submit ngay lập tức, không chặn, không hỏi
+  form.addEventListener("submit", () => {
+    // cho phép submit mặc định
+  });
+
+  setStep(1);
 });
 
-// Expose FormAI instance for external AI service integration
-window.loanFormAI = null;
-document.addEventListener("DOMContentLoaded", function () {
-  window.loanFormAI = new FormAI("loanOriginationForm");
-});
-
-// ===== Supabase Shared State (kept) =====
+// ===== Supabase Shared State (giữ nguyên) =====
 (function () {
   const FORM_ID = "loanOriginationForm";
   const form = document.getElementById(FORM_ID);
-  if (!form) {
-    console.warn("[Supabase] Không tìm thấy form #loanOriginationForm");
-    return;
-  }
+  if (!form) return;
 
-  if (!window.supabase || !window.__SB_URL__ || !window.__SB_ANON__) {
-    console.warn("[Supabase] SDK/chìa khóa chưa sẵn sàng");
-    return;
-  }
+  if (!window.supabase || !window.__SB_URL__ || !window.__SB_ANON__) return;
 
   const sb = window.supabase.createClient(
     window.__SB_URL__,
@@ -189,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Initial load
   async function loadShared() {
     const { data, error } = await sb
       .from("forms")
@@ -204,10 +131,10 @@ document.addEventListener("DOMContentLoaded", function () {
     loadShared();
   }
 
-  // Debounced save
   let saveTimer = null,
     isLocal = false,
     lastApply = 0;
+
   async function upsertNow() {
     try {
       isLocal = true;
@@ -234,7 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("input", scheduleSave, true);
   document.addEventListener("change", scheduleSave, true);
 
-  // Realtime updates
   const channel = sb
     .channel("realtime:forms:" + FORM_ROW_ID)
     .on(
@@ -256,35 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
     )
     .subscribe();
 
-  // Clear button — reset UI ngay + wipe Supabase (upsert {})
-  document.getElementById("clearBtn")?.addEventListener("click", async () => {
-    // 1) UI reset ngay lập tức (cho cảm giác real-time)
-    form.reset();
-    form.querySelectorAll("textarea").forEach((el) => (el.value = ""));
-    form.querySelectorAll("select").forEach((el) => {
-      if (el.querySelector('option[value=""]')) el.value = "";
-    });
-    const appDate = document.getElementById("applicationDate");
-    if (appDate) appDate.value = new Date().toISOString().split("T")[0];
-
-    // 2) Wipe trong Supabase (row luôn tồn tại nhờ upsert)
-    try {
-      isLocal = true;
-    } catch {}
-    await sb.from("forms").upsert(
-      {
-        id: FORM_ROW_ID,
-        data: {},
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "id" }
-    );
-    lastApply = Date.now();
-    isLocal = false;
-    console.log("[Supabase] cleared and UI reset");
-  });
-
-  // cleanup khi rời trang
   window.addEventListener("beforeunload", () => {
     try {
       sb.removeChannel(channel);

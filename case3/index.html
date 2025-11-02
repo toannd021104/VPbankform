@@ -6,6 +6,53 @@
     <title>VPBank - Đơn Nội Bộ HR</title>
     <link rel="stylesheet" href="styles.css" />
 
+    <style>
+      /* Wizard Styles */
+      .wizard-progress {
+        margin-bottom: 16px;
+      }
+      .wizard-steps {
+        display: flex;
+        gap: 8px;
+      }
+      .wizard-step {
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: #f2f4f7;
+        font-weight: 600;
+        opacity: 0.6;
+      }
+      .wizard-step.is-active,
+      .wizard-step.is-done {
+        opacity: 1;
+        background: #e6f4ff;
+      }
+      .wizard-bar {
+        height: 6px;
+        background: #eef2f6;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+      .wizard-bar-fill {
+        height: 100%;
+        background: #1677ff;
+        width: 0;
+        transition: width 0.25s ease;
+      }
+      .wizard-step-pane.is-hidden {
+        display: none;
+      }
+      .wizard-navigation {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+      }
+    </style>
+
     <!-- Supabase SDK v2 (UMD) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <!-- Supabase inline config for Case 3 (can be overridden by envs on Vercel) -->
@@ -28,465 +75,250 @@
           <p>Hệ thống quản lý nhân sự - Human Resources</p>
         </div>
 
-        <!-- Employee Information -->
-        <div class="form-section">
-          <h2>Thông Tin Nhân Viên</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="employeeName"
-                >Họ và Tên <span class="required">*</span></label
-              >
-              <input type="text" id="employeeName" name="employeeName" />
-              <span class="error-message"></span>
+        <!-- Wizard Progress -->
+        <div class="wizard-progress">
+          <div class="wizard-steps">
+            <div class="wizard-step is-active" data-step="1">Thông tin NV</div>
+            <div class="wizard-step" data-step="2">Yêu cầu</div>
+            <div class="wizard-step" data-step="3">Phê duyệt & Bổ sung</div>
+          </div>
+          <div class="wizard-bar">
+            <div class="wizard-bar-fill" style="width: 33.33%"></div>
+          </div>
+        </div>
+
+        <!-- Step 1: Employee Information -->
+        <div class="wizard-step-pane" id="step1" data-step="1">
+          <div class="form-section">
+            <h2>Thông Tin Nhân Viên</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="employeeName">Họ và Tên</label>
+                <input type="text" id="employeeName" name="employeeName" />
+              </div>
+
+              <div class="form-group">
+                <label for="employeeId">Mã Nhân Viên</label>
+                <input type="text" id="employeeId" name="employeeId" />
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="employeeId"
-                >Mã Nhân Viên <span class="required">*</span></label
-              >
-              <input type="text" id="employeeId" name="employeeId" />
-              <span class="error-message"></span>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="department">Phòng Ban</label>
+                <select id="department" name="department">
+                  <option value="">-- Chọn phòng ban --</option>
+                  <option value="retail-lending">Retail Lending</option>
+                  <option value="customer-service">Customer Service</option>
+                  <option value="human-resources">Human Resources</option>
+                  <option value="risk-compliance">Risk & Compliance</option>
+                  <option value="operations">Operations</option>
+                  <option value="it">IT</option>
+                  <option value="finance">Finance</option>
+                  <option value="marketing">Marketing</option>
+                  <option value="sales">Sales</option>
+                  <option value="other">Khác</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="position">Chức Vụ</label>
+                <input type="text" id="position" name="position" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" />
+              </div>
+
+              <div class="form-group">
+                <label for="phoneNumber">Số Điện Thoại</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" />
+              </div>
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="wizard-navigation">
+            <button type="button" class="btn-primary btn-next" data-next="2">
+              Tiếp tục
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Request Information -->
+        <div class="wizard-step-pane is-hidden" id="step2" data-step="2">
+          <div class="form-section">
+            <h2>Thông Tin Yêu Cầu</h2>
+
             <div class="form-group">
-              <label for="department"
-                >Phòng Ban <span class="required">*</span></label
-              >
-              <select id="department" name="department">
-                <option value="">-- Chọn phòng ban --</option>
-                <option value="retail-lending">Retail Lending</option>
-                <option value="customer-service">Customer Service</option>
-                <option value="human-resources">Human Resources</option>
-                <option value="risk-compliance">Risk & Compliance</option>
-                <option value="operations">Operations</option>
-                <option value="it">IT</option>
-                <option value="finance">Finance</option>
-                <option value="marketing">Marketing</option>
-                <option value="sales">Sales</option>
+              <label for="requestType">Loại Đơn</label>
+              <select id="requestType" name="requestType">
+                <option value="">-- Chọn loại đơn --</option>
+                <option value="leave">Nghỉ phép</option>
+                <option value="business-trip">Công tác</option>
+                <option value="training">Đào tạo</option>
+                <option value="equipment">Yêu cầu trang thiết bị</option>
+                <option value="reimbursement">Hoàn ứng chi phí</option>
+                <option value="certificate">Xin giấy xác nhận</option>
+                <option value="resignation">Xin nghỉ việc</option>
                 <option value="other">Khác</option>
               </select>
-              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group" id="leaveTypeGroup" style="display: none">
+              <label for="leaveType">Loại Nghỉ Phép</label>
+              <select id="leaveType" name="leaveType">
+                <option value="">-- Chọn loại nghỉ phép --</option>
+                <option value="annual">Nghỉ phép năm</option>
+                <option value="sick">Nghỉ ốm</option>
+                <option value="personal">Nghỉ cá nhân</option>
+                <option value="unpaid">Nghỉ không lương</option>
+                <option value="maternity">Nghỉ thai sản</option>
+                <option value="paternity">Nghỉ chăm con</option>
+                <option value="wedding">Nghỉ cưới</option>
+                <option value="funeral">Nghỉ tang</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="startDate">Ngày Bắt Đầu</label>
+                <input type="date" id="startDate" name="startDate" />
+              </div>
+
+              <div class="form-group">
+                <label for="endDate">Ngày Kết Thúc</label>
+                <input type="date" id="endDate" name="endDate" />
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="position">Chức Vụ</label>
-              <input type="text" id="position" name="position" />
-              <span class="error-message"></span>
+              <label for="duration">Số Ngày</label>
+              <input
+                type="number"
+                id="duration"
+                name="duration"
+                min="0"
+                step="0.5"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="reason">Lý Do</label>
+              <textarea
+                id="reason"
+                name="reason"
+                placeholder="Mô tả lý do yêu cầu..."
+              ></textarea>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="email">Email <span class="required">*</span></label>
-              <input type="email" id="email" name="email" />
-              <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-              <label for="phoneNumber">Số Điện Thoại</label>
-              <input type="tel" id="phoneNumber" name="phoneNumber" />
-              <span class="error-message"></span>
-            </div>
+          <div class="wizard-navigation">
+            <button type="button" class="btn-secondary btn-prev" data-prev="1">
+              Quay lại
+            </button>
+            <button type="button" class="btn-primary btn-next" data-next="3">
+              Tiếp tục
+            </button>
           </div>
         </div>
 
-        <!-- Request Information -->
-        <div class="form-section">
-          <h2>Thông Tin Yêu Cầu</h2>
+        <!-- Step 3: Approval & Additional Information -->
+        <div class="wizard-step-pane is-hidden" id="step3" data-step="3">
+          <!-- Approval Information -->
+          <div class="form-section">
+            <h2>Thông Tin Phê Duyệt</h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="managerName">Tên Quản Lý Trực Tiếp</label>
+                <input type="text" id="managerName" name="managerName" />
+              </div>
 
-          <div class="form-group">
-            <label for="requestType"
-              >Loại Đơn <span class="required">*</span></label
-            >
-            <select id="requestType" name="requestType">
-              <option value="">-- Chọn loại đơn --</option>
-              <option value="leave">Nghỉ phép</option>
-              <option value="business-trip">Công tác</option>
-              <option value="training">Đào tạo</option>
-              <option value="equipment">Yêu cầu trang thiết bị</option>
-              <option value="reimbursement">Hoàn ứng chi phí</option>
-              <option value="certificate">Xin giấy xác nhận</option>
-              <option value="resignation">Xin nghỉ việc</option>
-              <option value="other">Khác</option>
-            </select>
-            <span class="error-message"></span>
-          </div>
+              <div class="form-group">
+                <label for="managerEmail">Email Quản Lý</label>
+                <input type="email" id="managerEmail" name="managerEmail" />
+              </div>
+            </div>
 
-          <div class="form-group" id="leaveTypeGroup" style="display: none">
-            <label for="leaveType">Loại Nghỉ Phép</label>
-            <select id="leaveType" name="leaveType">
-              <option value="">-- Chọn loại nghỉ phép --</option>
-              <option value="annual">Nghỉ phép năm</option>
-              <option value="sick">Nghỉ ốm</option>
-              <option value="personal">Nghỉ cá nhân</option>
-              <option value="unpaid">Nghỉ không lương</option>
-              <option value="maternity">Nghỉ thai sản</option>
-              <option value="paternity">Nghỉ chăm con</option>
-              <option value="wedding">Nghỉ cưới</option>
-              <option value="funeral">Nghỉ tang</option>
-            </select>
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-row">
             <div class="form-group">
-              <label for="startDate"
-                >Ngày Bắt Đầu <span class="required">*</span></label
+              <label for="approvalStatus">Trạng Thái</label>
+              <select id="approvalStatus" name="approvalStatus">
+                <option value="pending">Chờ phê duyệt</option>
+                <option value="approved">Đã phê duyệt</option>
+                <option value="rejected">Từ chối</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+            </div>
+
+            <div
+              class="form-group"
+              id="rejectionReasonGroup"
+              style="display: none"
+            >
+              <label for="rejectionReason">Lý Do Từ Chối</label>
+              <textarea id="rejectionReason" name="rejectionReason"></textarea>
+            </div>
+          </div>
+
+          <!-- Additional Information -->
+          <div class="form-section">
+            <h2>Thông Tin Bổ Sung</h2>
+            <div class="form-group">
+              <label for="submissionDate">Ngày Nộp Đơn</label>
+              <input type="date" id="submissionDate" name="submissionDate" />
+            </div>
+
+            <div class="form-group">
+              <label for="contactDuringAbsence"
+                >Thông Tin Liên Lạc (Khi Nghỉ)</label
               >
-              <input type="date" id="startDate" name="startDate" />
-              <span class="error-message"></span>
+              <input
+                type="text"
+                id="contactDuringAbsence"
+                name="contactDuringAbsence"
+                placeholder="Số điện thoại, email dự phòng"
+              />
             </div>
 
             <div class="form-group">
-              <label for="endDate"
-                >Ngày Kết Thúc <span class="required">*</span></label
-              >
-              <input type="date" id="endDate" name="endDate" />
-              <span class="error-message"></span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="duration">Số Ngày</label>
-            <input
-              type="number"
-              id="duration"
-              name="duration"
-              min="0"
-              step="0.5"
-              readonly
-            />
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="reason">Lý Do <span class="required">*</span></label>
-            <textarea
-              id="reason"
-              name="reason"
-              placeholder="Mô tả lý do yêu cầu..."
-            ></textarea>
-            <span class="error-message"></span>
-          </div>
-        </div>
-
-        <!-- Approval Information -->
-        <div class="form-section">
-          <h2>Thông Tin Phê Duyệt</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="managerName"
-                >Tên Quản Lý Trực Tiếp <span class="required">*</span></label
-              >
-              <input type="text" id="managerName" name="managerName" />
-              <span class="error-message"></span>
+              <label for="workHandover">Bàn Giao Công Việc</label>
+              <textarea
+                id="workHandover"
+                name="workHandover"
+                placeholder="Người nhận bàn giao, công việc cần xử lý..."
+              ></textarea>
             </div>
 
             <div class="form-group">
-              <label for="managerEmail">Email Quản Lý</label>
-              <input type="email" id="managerEmail" name="managerEmail" />
-              <span class="error-message"></span>
+              <label for="attachments">File Đính Kèm (nếu có)</label>
+              <input type="file" id="attachments" name="attachments" multiple />
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Ghi Chú</label>
+              <textarea
+                id="notes"
+                name="notes"
+                placeholder="Các thông tin bổ sung khác..."
+              ></textarea>
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="approvalStatus"
-              >Trạng Thái <span class="required">*</span></label
-            >
-            <select id="approvalStatus" name="approvalStatus">
-              <option value="pending">Chờ phê duyệt</option>
-              <option value="approved">Đã phê duyệt</option>
-              <option value="rejected">Từ chối</option>
-              <option value="cancelled">Đã hủy</option>
-            </select>
-            <span class="error-message"></span>
+          <div class="wizard-navigation">
+            <button type="button" class="btn-secondary" id="clearBtn">
+              Xóa Form
+            </button>
+            <button type="button" class="btn-secondary btn-prev" data-prev="2">
+              Quay lại
+            </button>
+            <button type="submit" class="btn-primary">Gửi đơn</button>
           </div>
-
-          <div
-            class="form-group"
-            id="rejectionReasonGroup"
-            style="display: none"
-          >
-            <label for="rejectionReason">Lý Do Từ Chối</label>
-            <textarea id="rejectionReason" name="rejectionReason"></textarea>
-            <span class="error-message"></span>
-          </div>
-        </div>
-
-        <!-- Additional Information -->
-        <div class="form-section">
-          <h2>Thông Tin Bổ Sung</h2>
-          <div class="form-group">
-            <label for="submissionDate"
-              >Ngày Nộp Đơn <span class="required">*</span></label
-            >
-            <input type="date" id="submissionDate" name="submissionDate" />
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="contactDuringAbsence"
-              >Thông Tin Liên Lạc (Khi Nghỉ)</label
-            >
-            <input
-              type="text"
-              id="contactDuringAbsence"
-              name="contactDuringAbsence"
-              placeholder="Số điện thoại, email dự phòng"
-            />
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="workHandover">Bàn Giao Công Việc</label>
-            <textarea
-              id="workHandover"
-              name="workHandover"
-              placeholder="Người nhận bàn giao, công việc cần xử lý..."
-            ></textarea>
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="attachments">File Đính Kèm (nếu có)</label>
-            <input type="file" id="attachments" name="attachments" multiple />
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="notes">Ghi Chú</label>
-            <textarea
-              id="notes"
-              name="notes"
-              placeholder="Các thông tin bổ sung khác..."
-            ></textarea>
-            <span class="error-message"></span>
-          </div>
-        </div>
-
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" id="clearBtn">
-            Xóa Form
-          </button>
-          <button type="button" class="btn-secondary" id="aiTestBtn">
-            Test AI
-          </button>
-          <button type="submit" class="btn-primary">Gửi Đơn</button>
         </div>
       </form>
     </div>
 
-    <!-- (ĐÃ BỎ Modal & BỎ LocalStorage block) -->
     <script src="script.js"></script>
-
-    <!-- ===== DB-only Shared State (Supabase) — NO LocalStorage, no confirm on clear ===== -->
-    <script>
-      (function () {
-        const FORM_ID = "hrWorkflowForm";
-        const TABLE = window.__TABLE__ || "hr_forms";
-        const ROW_ID = window.__ROW_ID__ || "use-case-3-hr-workflow";
-        const SB_URL = window.__SB_URL__;
-        const SB_ANON = window.__SB_ANON__;
-        const SAVE_MS = 300;
-
-        const form = document.getElementById(FORM_ID);
-        const clearBtn = document.getElementById("clearBtn");
-        const requestType = document.getElementById("requestType");
-        const leaveTypeGroup = document.getElementById("leaveTypeGroup");
-        const approvalStatus = document.getElementById("approvalStatus");
-        const rejectionReasonGroup = document.getElementById(
-          "rejectionReasonGroup"
-        );
-
-        if (!form) return;
-        if (!window.supabase || !SB_URL || !SB_ANON) {
-          console.warn("[Supabase] SDK/Config chưa sẵn sàng");
-          return;
-        }
-        const sb = window.supabase.createClient(SB_URL, SB_ANON);
-
-        // UI logic giữ nguyên (không required): hiển thị nhóm field theo lựa chọn
-        requestType?.addEventListener("change", function () {
-          leaveTypeGroup.style.display =
-            this.value === "leave" ? "block" : "none";
-        });
-        approvalStatus?.addEventListener("change", function () {
-          rejectionReasonGroup.style.display =
-            this.value === "rejected" ? "block" : "none";
-        });
-
-        function isSavable(el) {
-          if (!el || el.disabled) return false;
-          const t = (el.type || "").toLowerCase();
-          const tag = (el.tagName || "").toLowerCase();
-          if (["button", "submit", "reset", "file"].includes(t)) return false;
-          if (tag === "fieldset") return false;
-          return Boolean(el.name || el.id);
-        }
-        const keyOf = (el) => el.name || el.id;
-
-        function serializeForm() {
-          const values = {};
-          const fields = Array.from(form.elements).filter(isSavable);
-          const radioHandled = new Set();
-          for (const el of fields) {
-            const k = keyOf(el);
-            if (!k) continue;
-            if (el.type === "radio") {
-              if (radioHandled.has(k)) continue;
-              radioHandled.add(k);
-              const checked = form.querySelector(
-                `input[type="radio"][name="${CSS.escape(k)}"]:checked`
-              );
-              values[k] = checked ? checked.value : "";
-            } else if (el.type === "checkbox") {
-              values[k] = !!el.checked;
-            } else if (el.tagName === "SELECT" && el.multiple) {
-              values[k] = Array.from(el.options)
-                .filter((o) => o.selected)
-                .map((o) => o.value);
-            } else {
-              values[k] = el.value ?? "";
-            }
-          }
-          return values;
-        }
-
-        function applyToForm(data) {
-          if (!data || typeof data !== "object") return;
-          Object.entries(data).forEach(([name, value]) => {
-            const nodes = form.querySelectorAll(
-              `[name="${CSS.escape(name)}"], #${CSS.escape(name)}`
-            );
-            if (!nodes.length) return;
-            const first = nodes[0];
-            if (first.type === "radio") {
-              nodes.forEach((el) => {
-                el.checked = el.value === value;
-              });
-            } else if (first.type === "checkbox") {
-              nodes.forEach((el) => (el.checked = !!value));
-            } else if (first.tagName === "SELECT") {
-              if (first.multiple && Array.isArray(value)) {
-                Array.from(first.options).forEach(
-                  (opt) => (opt.selected = value.includes(opt.value))
-                );
-              } else {
-                first.value = value ?? "";
-              }
-            } else if (first.type !== "file") {
-              nodes.forEach((el) => (el.value = value ?? ""));
-            }
-          });
-
-          // cập nhật hiển thị nhóm phụ thuộc
-          if (requestType)
-            leaveTypeGroup.style.display =
-              requestType.value === "leave" ? "block" : "none";
-          if (approvalStatus)
-            rejectionReasonGroup.style.display =
-              approvalStatus.value === "rejected" ? "block" : "none";
-        }
-
-        // initial load
-        (async function initialLoad() {
-          const { data, error } = await sb
-            .from(TABLE)
-            .select("data")
-            .eq("id", ROW_ID)
-            .maybeSingle();
-          if (!error && data && data.data) applyToForm(data.data);
-        })();
-
-        // debounce save
-        let saveTimer = null,
-          isLocal = false,
-          last = 0;
-        async function upsertNow() {
-          try {
-            isLocal = true;
-          } catch {}
-          try {
-            const payload = {
-              id: ROW_ID,
-              data: serializeForm(),
-              updated_at: new Date().toISOString(),
-            };
-            const { error } = await sb
-              .from(TABLE)
-              .upsert(payload, { onConflict: "id" });
-            if (error) console.error("[Supabase] upsert error:", error);
-            last = Date.now();
-          } finally {
-            isLocal = false;
-          }
-        }
-        function schedule() {
-          clearTimeout(saveTimer);
-          saveTimer = setTimeout(upsertNow, SAVE_MS);
-        }
-        form.addEventListener("input", schedule, true);
-        form.addEventListener("change", schedule, true);
-        form.addEventListener("submit", schedule, true);
-
-        // Clear — KHÔNG modal: reset UI + upsert {} ngay
-        clearBtn?.addEventListener("click", async () => {
-          form.reset();
-          // làm sạch textarea/select tự do
-          form.querySelectorAll("textarea").forEach((el) => (el.value = ""));
-          form.querySelectorAll("select").forEach((el) => {
-            if (el.querySelector('option[value=""]')) el.value = "";
-          });
-          leaveTypeGroup.style.display = "none";
-          rejectionReasonGroup.style.display = "none";
-
-          // wipe DB
-          try {
-            isLocal = true;
-          } catch {}
-          await sb
-            .from(TABLE)
-            .upsert(
-              { id: ROW_ID, data: {}, updated_at: new Date().toISOString() },
-              { onConflict: "id" }
-            );
-          last = Date.now();
-          isLocal = false;
-        });
-
-        // realtime
-        const ch = sb
-          .channel("realtime:" + TABLE + ":" + ROW_ID)
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: TABLE,
-              filter: `id=eq.${ROW_ID}`,
-            },
-            (payload) => {
-              if (isLocal || Date.now() - last < 250) return;
-              const incoming = payload.new && payload.new.data;
-              if (incoming) {
-                applyToForm(incoming);
-                last = Date.now();
-              }
-            }
-          )
-          .subscribe();
-
-        // cleanup
-        window.addEventListener("beforeunload", () => {
-          try {
-            sb.removeChannel(ch);
-          } catch {}
-        });
-      })();
-    </script>
-    <!-- ===== end DB-only ===== -->
   </body>
 </html>

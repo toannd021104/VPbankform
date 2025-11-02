@@ -30,7 +30,6 @@ body {
   line-height: 1.6;
   color: var(--text-color);
   background: url("bg.webp") no-repeat center/cover fixed;
-
   background-color: var(--background-alt);
 }
 
@@ -67,6 +66,51 @@ body {
   font-size: 16px;
 }
 
+/* Wizard Styles */
+.wizard-progress {
+  margin-bottom: 16px;
+}
+.wizard-steps {
+  display: flex;
+  gap: 8px;
+}
+.wizard-step {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f2f4f7;
+  font-weight: 600;
+  opacity: 0.6;
+}
+.wizard-step.is-active,
+.wizard-step.is-done {
+  opacity: 1;
+  background: #e6f4ff;
+}
+.wizard-bar {
+  height: 6px;
+  background: #eef2f6;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.wizard-bar-fill {
+  height: 100%;
+  background: #1677ff;
+  width: 0;
+  transition: width 0.25s ease;
+}
+.wizard-step-pane.is-hidden {
+  display: none;
+}
+.wizard-navigation {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
 /* Form Sections */
 .form-section {
   margin-bottom: 30px;
@@ -98,10 +142,7 @@ label {
   color: var(--text-color);
 }
 
-label .required {
-  color: var(--error-color);
-  margin-left: 4px;
-}
+/* Đã xóa .required class */
 
 /* Input Styles */
 input[type="text"],
@@ -133,41 +174,7 @@ textarea {
   resize: vertical;
 }
 
-/* Error States */
-.form-group.error input,
-.form-group.error select,
-.form-group.error textarea {
-  border-color: var(--error-color);
-}
-
-.error-message {
-  display: none;
-  color: var(--error-color);
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-.form-group.error .error-message {
-  display: block;
-}
-
-/* Success States */
-.form-group.success input,
-.form-group.success select,
-.form-group.success textarea {
-  border-color: var(--success-color);
-}
-
 /* Buttons */
-.form-actions {
-  display: flex;
-  gap: 15px;
-  justify-content: flex-end;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
-}
-
 button {
   padding: 12px 30px;
   border: none;
@@ -208,122 +215,6 @@ button {
   background-color: #c82333;
 }
 
-/* Alerts */
-.alert {
-  padding: 15px 20px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-  display: none;
-}
-
-.alert.show {
-  display: block;
-}
-
-.alert-success {
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  color: #155724;
-}
-
-.alert-error {
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
-}
-
-.alert-info {
-  background-color: #d1ecf1;
-  border: 1px solid #bee5eb;
-  color: #0c5460;
-}
-
-/* Loading State */
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Modal/Confirmation Dialog */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.3s;
-}
-
-.modal.show {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background-color: var(--background);
-  padding: 30px;
-  border-radius: 8px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: var(--shadow-lg);
-  animation: slideDown 0.3s;
-}
-
-.modal-header h3 {
-  color: var(--primary-color);
-  margin-bottom: 15px;
-}
-
-.modal-body {
-  margin-bottom: 20px;
-}
-
-.modal-footer {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -342,40 +233,17 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .form-actions {
-    flex-direction: column-reverse;
+  .wizard-navigation {
+    flex-direction: column;
+    gap: 15px;
   }
 
   button {
     width: 100%;
   }
 
-  .modal-content {
-    margin: 20px;
-  }
-}
-
-/* Accessibility */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Print Styles */
-@media print {
-  .form-actions,
-  .btn-secondary {
-    display: none;
-  }
-
-  .vpbank-form {
-    box-shadow: none;
+  .wizard-steps {
+    flex-direction: column;
+    gap: 4px;
   }
 }

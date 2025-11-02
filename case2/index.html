@@ -6,27 +6,6 @@
     <title>VPBank - Cập Nhật CRM & Log Tương Tác</title>
     <link rel="stylesheet" href="styles.css" />
 
-    <style>
-      /* Bổ sung nhẹ để hiển thị trạng thái lưu (nếu styles.css chưa có) */
-      .save-status {
-        font-size: 0.9rem;
-        opacity: 0.8;
-        margin-top: 4px;
-      }
-      .save-status.ok {
-        color: #138000;
-      }
-      .save-status.warn {
-        color: #b35c00;
-      }
-      .modal {
-        display: none;
-      }
-      .modal.open {
-        display: block;
-      }
-    </style>
-
     <!-- Supabase SDK v2 (UMD) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <!-- Supabase inline config for Case 2 -->
@@ -42,538 +21,257 @@
   </head>
   <body>
     <div class="container">
-      <!-- thêm novalidate để tắt HTML5 validation mặc định -->
       <form id="crmUpdateForm" class="vpbank-form" novalidate>
         <div class="form-header">
           <h1>Cập Nhật CRM & Log Tương Tác</h1>
           <p>Hệ thống chăm sóc khách hàng - Customer Service</p>
-          <!-- Thêm status nhỏ (không ảnh hưởng layout cũ) -->
-          <div id="saveStatus" class="save-status"></div>
         </div>
 
-        <!-- Customer Information -->
-        <div class="form-section">
-          <h2>Thông Tin Khách Hàng</h2>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="customerName">
-                Họ và Tên <span class="required">*</span>
-              </label>
-              <input type="text" id="customerName" name="customerName" />
-              <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-              <label for="customerId">
-                Mã Khách Hàng <span class="required">*</span>
-              </label>
-              <input type="text" id="customerId" name="customerId" />
-              <span class="error-message"></span>
-            </div>
+        <!-- Wizard Progress -->
+        <div class="wizard-progress">
+          <div class="wizard-steps">
+            <div class="wizard-step is-active" data-step="1">Thông tin KH</div>
+            <div class="wizard-step" data-step="2">Tương tác</div>
+            <div class="wizard-step" data-step="3">Giải quyết & Đánh giá</div>
           </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="phoneNumber">
-                Số Điện Thoại <span class="required">*</span>
-              </label>
-              <input type="tel" id="phoneNumber" name="phoneNumber" />
-              <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-              <label for="email"> Email </label>
-              <input type="email" id="email" name="email" />
-              <span class="error-message"></span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="address"> Địa Chỉ </label>
-            <textarea
-              id="address"
-              name="address"
-              placeholder="Cập nhật địa chỉ mới nếu có thay đổi"
-            ></textarea>
-            <span class="error-message"></span>
+          <div class="wizard-bar">
+            <div class="wizard-bar-fill" style="width: 33%"></div>
           </div>
         </div>
 
-        <!-- Interaction Details -->
-        <div class="form-section">
-          <h2>Chi Tiết Tương Tác</h2>
+        <!-- STEP 1: Customer Information -->
+        <section class="wizard-step-pane" data-step="1">
+          <div class="form-section">
+            <h2>Thông Tin Khách Hàng</h2>
 
-          <div class="form-row">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customerName">Họ và Tên</label>
+                <input type="text" id="customerName" name="customerName" />
+              </div>
+
+              <div class="form-group">
+                <label for="customerId">Mã Khách Hàng</label>
+                <input type="text" id="customerId" name="customerId" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phoneNumber">Số Điện Thoại</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" />
+              </div>
+            </div>
+
             <div class="form-group">
-              <label for="interactionType">
-                Loại Tương Tác <span class="required">*</span>
-              </label>
-              <select id="interactionType" name="interactionType">
-                <option value="">-- Chọn loại --</option>
-                <option value="call">Cuộc gọi</option>
-                <option value="email">Email</option>
-                <option value="visit">Gặp trực tiếp</option>
-                <option value="chat">Chat online</option>
-                <option value="sms">SMS</option>
+              <label for="address">Địa Chỉ</label>
+              <textarea
+                id="address"
+                name="address"
+                placeholder="Cập nhật địa chỉ mới nếu có thay đổi"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-primary wizard-next">
+              Tiếp tục
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 2: Interaction Details -->
+        <section class="wizard-step-pane is-hidden" data-step="2">
+          <div class="form-section">
+            <h2>Chi Tiết Tương Tác</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="interactionType">Loại Tương Tác</label>
+                <select id="interactionType" name="interactionType">
+                  <option value="">-- Chọn loại --</option>
+                  <option value="call">Cuộc gọi</option>
+                  <option value="email">Email</option>
+                  <option value="visit">Gặp trực tiếp</option>
+                  <option value="chat">Chat online</option>
+                  <option value="sms">SMS</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="interactionDate">Ngày Tương Tác</label>
+                <input
+                  type="date"
+                  id="interactionDate"
+                  name="interactionDate"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="interactionTime">Thời Gian</label>
+                <input
+                  type="time"
+                  id="interactionTime"
+                  name="interactionTime"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="duration">Thời Lượng (phút)</label>
+                <input
+                  type="number"
+                  id="duration"
+                  name="duration"
+                  min="0"
+                  placeholder="Thời gian tương tác"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="agentName">Tên Nhân Viên</label>
+              <input type="text" id="agentName" name="agentName" />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary wizard-prev">
+              Quay lại
+            </button>
+            <button type="button" class="btn-primary wizard-next">
+              Tiếp tục
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 3: Issue, Resolution & Satisfaction -->
+        <section class="wizard-step-pane is-hidden" data-step="3">
+          <!-- Issue & Resolution -->
+          <div class="form-section">
+            <h2>Vấn Đề & Giải Quyết</h2>
+
+            <div class="form-group">
+              <label for="issueCategory">Danh Mục Vấn Đề</label>
+              <select id="issueCategory" name="issueCategory">
+                <option value="">-- Chọn danh mục --</option>
+                <option value="account">Tài khoản</option>
+                <option value="card">Thẻ</option>
+                <option value="loan">Vay vốn</option>
+                <option value="transaction">Giao dịch</option>
+                <option value="complaint">Khiếu nại</option>
+                <option value="information">Tư vấn thông tin</option>
+                <option value="service">Dịch vụ</option>
+                <option value="other">Khác</option>
               </select>
-              <span class="error-message"></span>
             </div>
 
             <div class="form-group">
-              <label for="interactionDate">
-                Ngày Tương Tác <span class="required">*</span>
-              </label>
-              <input type="date" id="interactionDate" name="interactionDate" />
-              <span class="error-message"></span>
+              <label for="issueDescription">Mô Tả Vấn Đề</label>
+              <textarea
+                id="issueDescription"
+                name="issueDescription"
+                placeholder="Mô tả chi tiết vấn đề khách hàng gặp phải..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="resolutionStatus">Trạng Thái Xử Lý</label>
+              <select id="resolutionStatus" name="resolutionStatus">
+                <option value="">-- Chọn trạng thái --</option>
+                <option value="resolved">Đã giải quyết</option>
+                <option value="pending">Đang xử lý</option>
+                <option value="escalated">Đã chuyển lên cấp trên</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="resolutionDetails">Chi Tiết Giải Quyết</label>
+              <textarea
+                id="resolutionDetails"
+                name="resolutionDetails"
+                placeholder="Mô tả cách giải quyết hoặc bước tiếp theo..."
+              ></textarea>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="interactionTime"> Thời Gian </label>
-              <input type="time" id="interactionTime" name="interactionTime" />
-              <span class="error-message"></span>
+          <!-- Customer Satisfaction -->
+          <div class="form-section">
+            <h2>Đánh Giá Khách Hàng</h2>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="satisfactionRating">Mức Độ Hài Lòng</label>
+                <select id="satisfactionRating" name="satisfactionRating">
+                  <option value="">-- Chọn --</option>
+                  <option value="5">⭐⭐⭐⭐⭐ Rất hài lòng</option>
+                  <option value="4">⭐⭐⭐⭐ Hài lòng</option>
+                  <option value="3">⭐⭐⭐ Bình thường</option>
+                  <option value="2">⭐⭐ Không hài lòng</option>
+                  <option value="1">⭐ Rất không hài lòng</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="followUpRequired">Cần Theo Dõi</label>
+                <select id="followUpRequired" name="followUpRequired">
+                  <option value="">-- Chọn --</option>
+                  <option value="yes">Có</option>
+                  <option value="no">Không</option>
+                </select>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="duration"> Thời Lượng (phút) </label>
+              <label for="followUpDate">Ngày Theo Dõi</label>
+              <input type="date" id="followUpDate" name="followUpDate" />
+            </div>
+          </div>
+
+          <!-- Additional Notes -->
+          <div class="form-section">
+            <h2>Ghi Chú</h2>
+
+            <div class="form-group">
+              <label for="notes">Ghi Chú Thêm</label>
+              <textarea
+                id="notes"
+                name="notes"
+                placeholder="Các thông tin bổ sung, lưu ý đặc biệt..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="tags">Tags (phân cách bằng dấu phẩy)</label>
               <input
-                type="number"
-                id="duration"
-                name="duration"
-                min="0"
-                placeholder="Thời gian tương tác"
+                type="text"
+                id="tags"
+                name="tags"
+                placeholder="VIP, urgent, follow-up"
               />
-              <span class="error-message"></span>
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="agentName">
-              Tên Nhân Viên <span class="required">*</span>
-            </label>
-            <input type="text" id="agentName" name="agentName" />
-            <span class="error-message"></span>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="clearBtn">
+              Xóa Form
+            </button>
+            <button type="button" class="btn-secondary wizard-prev">
+              Quay lại
+            </button>
+            <button type="submit" class="btn-primary">Gửi đơn</button>
           </div>
-        </div>
-
-        <!-- Issue & Resolution -->
-        <div class="form-section">
-          <h2>Vấn Đề & Giải Quyết</h2>
-
-          <div class="form-group">
-            <label for="issueCategory">
-              Danh Mục Vấn Đề <span class="required">*</span>
-            </label>
-            <select id="issueCategory" name="issueCategory">
-              <option value="">-- Chọn danh mục --</option>
-              <option value="account">Tài khoản</option>
-              <option value="card">Thẻ</option>
-              <option value="loan">Vay vốn</option>
-              <option value="transaction">Giao dịch</option>
-              <option value="complaint">Khiếu nại</option>
-              <option value="information">Tư vấn thông tin</option>
-              <option value="service">Dịch vụ</option>
-              <option value="other">Khác</option>
-            </select>
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="issueDescription">
-              Mô Tả Vấn Đề <span class="required">*</span>
-            </label>
-            <textarea
-              id="issueDescription"
-              name="issueDescription"
-              placeholder="Mô tả chi tiết vấn đề khách hàng gặp phải..."
-            ></textarea>
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="resolutionStatus">
-              Trạng Thái Xử Lý <span class="required">*</span>
-            </label>
-            <select id="resolutionStatus" name="resolutionStatus">
-              <option value="">-- Chọn trạng thái --</option>
-              <option value="resolved">Đã giải quyết</option>
-              <option value="pending">Đang xử lý</option>
-              <option value="escalated">Đã chuyển lên cấp trên</option>
-              <option value="cancelled">Đã hủy</option>
-            </select>
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="resolutionDetails"> Chi Tiết Giải Quyết </label>
-            <textarea
-              id="resolutionDetails"
-              name="resolutionDetails"
-              placeholder="Mô tả cách giải quyết hoặc bước tiếp theo..."
-            ></textarea>
-            <span class="error-message"></span>
-          </div>
-        </div>
-
-        <!-- Customer Satisfaction -->
-        <div class="form-section">
-          <h2>Đánh Giá Khách Hàng</h2>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="satisfactionRating"> Mức Độ Hài Lòng </label>
-              <select id="satisfactionRating" name="satisfactionRating">
-                <option value="">-- Chọn --</option>
-                <option value="5">⭐⭐⭐⭐⭐ Rất hài lòng</option>
-                <option value="4">⭐⭐⭐⭐ Hài lòng</option>
-                <option value="3">⭐⭐⭐ Bình thường</option>
-                <option value="2">⭐⭐ Không hài lòng</option>
-                <option value="1">⭐ Rất không hài lòng</option>
-              </select>
-              <span class="error-message"></span>
-            </div>
-
-            <div class="form-group">
-              <label for="followUpRequired"> Cần Theo Dõi </label>
-              <select id="followUpRequired" name="followUpRequired">
-                <option value="">-- Chọn --</option>
-                <option value="yes">Có</option>
-                <option value="no">Không</option>
-              </select>
-              <span class="error-message"></span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="followUpDate"> Ngày Theo Dõi </label>
-            <input type="date" id="followUpDate" name="followUpDate" />
-            <span class="error-message"></span>
-          </div>
-        </div>
-
-        <!-- Additional Notes -->
-        <div class="form-section">
-          <h2>Ghi Chú</h2>
-
-          <div class="form-group">
-            <label for="notes"> Ghi Chú Thêm </label>
-            <textarea
-              id="notes"
-              name="notes"
-              placeholder="Các thông tin bổ sung, lưu ý đặc biệt..."
-            ></textarea>
-            <span class="error-message"></span>
-          </div>
-
-          <div class="form-group">
-            <label for="tags"> Tags (phân cách bằng dấu phẩy) </label>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              placeholder="VIP, urgent, follow-up"
-            />
-            <span class="error-message"></span>
-          </div>
-        </div>
-
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" id="clearBtn">
-            Xóa Form
-          </button>
-          <button type="button" class="btn-secondary" id="aiTestBtn">
-            Test AI
-          </button>
-          <button type="submit" class="btn-primary">Cập Nhật CRM</button>
-        </div>
+        </section>
       </form>
     </div>
 
-    <!-- Confirmation Modal -->
-    <div
-      id="confirmModal"
-      class="modal"
-      aria-hidden="true"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div class="modal-content" role="document">
-        <div class="modal-header">
-          <h3>Xác Nhận</h3>
-        </div>
-        <div class="modal-body">
-          <p id="confirmText">
-            Bạn có chắc chắn muốn thực hiện thao tác này không?
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary btn-cancel">Hủy</button>
-          <button type="button" class="btn-primary btn-confirm">
-            Xác Nhận
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- (Giữ nguyên nếu bạn cần) -->
-    <script src="../shared/utils.js"></script>
-    <script src="../shared/ai-integration.js"></script>
     <script src="script.js"></script>
-
-    <!-- ===== DB-only Shared State (Supabase) — NO LocalStorage ===== -->
-    <script>
-      (function () {
-        const FORM_ID = "crmUpdateForm";
-        const TABLE = window.__TABLE__ || "crm_forms";
-        const ROW_ID = window.__ROW_ID__ || "vpbank_crm_update_shared_form";
-        const SB_URL = window.__SB_URL__;
-        const SB_ANON = window.__SB_ANON__;
-        const SAVE_MS = 300;
-
-        const form = document.getElementById(FORM_ID);
-        const saveStatus = document.getElementById("saveStatus");
-        const confirmModal = document.getElementById("confirmModal");
-        const confirmText = document.getElementById("confirmText");
-        const btnCancel = confirmModal?.querySelector(".btn-cancel");
-        const btnConfirm = confirmModal?.querySelector(".btn-confirm");
-        const clearBtn = document.getElementById("clearBtn");
-
-        if (!form) return;
-        if (!window.supabase || !SB_URL || !SB_ANON) {
-          console.warn("[Supabase] SDK/Config chưa sẵn sàng");
-          return;
-        }
-        const sb = window.supabase.createClient(SB_URL, SB_ANON);
-
-        // ---- helpers ----
-        const setStatus = (txt, cls = "ok") => {
-          if (!saveStatus) return;
-          saveStatus.textContent = txt || "";
-          saveStatus.classList.remove("ok", "warn");
-          if (cls) saveStatus.classList.add(cls);
-        };
-        const fmtTime = (iso) => {
-          try {
-            const d = new Date(iso);
-            const dd = String(d.getDate()).padStart(2, "0");
-            const mm = String(d.getMonth() + 1).padStart(2, "0");
-            const yyyy = d.getFullYear();
-            const hh = String(d.getHours()).padStart(2, "0");
-            const mi = String(d.getMinutes()).padStart(2, "0");
-            const ss = String(d.getSeconds()).padStart(2, "0");
-            return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
-          } catch {
-            return "";
-          }
-        };
-        const isSavable = (el) => {
-          if (!el || el.disabled) return false;
-          const t = (el.type || "").toLowerCase();
-          const tag = (el.tagName || "").toLowerCase();
-          if (["button", "submit", "reset", "file"].includes(t)) return false;
-          if (tag === "fieldset") return false;
-          return Boolean(el.name || el.id);
-        };
-        const keyOf = (el) => el.name || el.id;
-
-        function serializeForm() {
-          const values = {};
-          const els = Array.from(form.elements).filter(isSavable);
-          for (const el of els) {
-            const k = keyOf(el);
-            if (!k) continue;
-            const tag = el.tagName.toLowerCase();
-            const type = (el.type || "").toLowerCase();
-            if (tag === "select") {
-              if (el.multiple) {
-                values[k] = Array.from(el.options)
-                  .filter((o) => o.selected)
-                  .map((o) => o.value);
-              } else {
-                values[k] = el.value ?? "";
-              }
-            } else if (type === "checkbox") {
-              values[k] = !!el.checked;
-            } else if (type === "radio") {
-              if (!(k in values) && el.checked) values[k] = el.value;
-              else if (!(k in values)) values[k] = "";
-            } else {
-              values[k] = el.value ?? "";
-            }
-          }
-          return values;
-        }
-
-        function applyToForm(values) {
-          if (!values) return;
-          for (const el of Array.from(form.elements).filter(isSavable)) {
-            const k = keyOf(el);
-            if (!(k in values)) continue;
-            const tag = el.tagName.toLowerCase();
-            const type = (el.type || "").toLowerCase();
-            const v = values[k];
-            try {
-              if (tag === "select") {
-                if (el.multiple && Array.isArray(v)) {
-                  Array.from(el.options).forEach(
-                    (opt) => (opt.selected = v.includes(opt.value))
-                  );
-                } else {
-                  el.value = v ?? "";
-                }
-              } else if (type === "checkbox") {
-                el.checked = !!v;
-              } else if (type === "radio") {
-                if (el.value === v) el.checked = true;
-              } else {
-                el.value = v ?? "";
-              }
-            } catch {}
-          }
-        }
-
-        // ---- load once ----
-        (async function initialLoad() {
-          const { data, error } = await sb
-            .from(TABLE)
-            .select("data, updated_at")
-            .eq("id", ROW_ID)
-            .maybeSingle();
-          if (!error && data && data.data) {
-            applyToForm(data.data);
-            setStatus(
-              "Đã khôi phục. Lần lưu gần nhất: " + fmtTime(data.updated_at),
-              "ok"
-            );
-          } else {
-            setStatus("Chưa có dữ liệu đồng bộ.", "warn");
-          }
-        })();
-
-        // ---- save (debounce 300ms) ----
-        let saveTimer = null,
-          isLocal = false,
-          lastApply = 0;
-        async function upsertNow() {
-          try {
-            isLocal = true;
-          } catch {}
-          try {
-            const payload = {
-              id: ROW_ID,
-              data: serializeForm(),
-              updated_at: new Date().toISOString(),
-            };
-            const { error } = await sb
-              .from(TABLE)
-              .upsert(payload, { onConflict: "id" });
-            if (error) console.error("[Supabase] upsert error", error);
-            setStatus("Đã lưu lúc " + fmtTime(payload.updated_at), "ok");
-            lastApply = Date.now();
-          } finally {
-            isLocal = false;
-          }
-        }
-        function scheduleSave() {
-          clearTimeout(saveTimer);
-          saveTimer = setTimeout(upsertNow, SAVE_MS);
-        }
-        form.addEventListener("input", scheduleSave, true);
-        form.addEventListener("change", scheduleSave, true);
-
-        // ---- realtime ----
-        const ch = sb
-          .channel("realtime:" + TABLE + ":" + ROW_ID)
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: TABLE,
-              filter: `id=eq.${ROW_ID}`,
-            },
-            (payload) => {
-              if (isLocal || Date.now() - lastApply < 200) return;
-              const incoming = payload.new && payload.new.data;
-              if (incoming) {
-                applyToForm(incoming);
-                setStatus("Đã đồng bộ từ realtime.", "ok");
-                lastApply = Date.now();
-              }
-            }
-          )
-          .subscribe();
-
-        // ---- modal helper ----
-        const openModal = (msg) => {
-          if (!confirmModal) return Promise.resolve(true); // không có modal thì auto-confirm
-          if (confirmText) confirmText.textContent = msg || "Bạn có chắc chắn?";
-          confirmModal.classList.add("open");
-          confirmModal.setAttribute("aria-hidden", "false");
-          return new Promise((resolve) => {
-            const onCancel = () => {
-              cleanup();
-              resolve(false);
-            };
-            const onConfirm = () => {
-              cleanup();
-              resolve(true);
-            };
-            const onKey = (e) => {
-              if (e.key === "Escape") onCancel();
-            };
-            function cleanup() {
-              btnCancel && btnCancel.removeEventListener("click", onCancel);
-              btnConfirm && btnConfirm.removeEventListener("click", onConfirm);
-              document.removeEventListener("keydown", onKey);
-              confirmModal.classList.remove("open");
-              confirmModal.setAttribute("aria-hidden", "true");
-            }
-            btnCancel &&
-              btnCancel.addEventListener("click", onCancel, { once: true });
-            btnConfirm &&
-              btnConfirm.addEventListener("click", onConfirm, { once: true });
-            document.addEventListener("keydown", onKey, { once: true });
-          });
-        };
-
-        // ---- clear: reset UI ngay + wipe DB bằng upsert {{}} ----
-        clearBtn?.addEventListener("click", async () => {
-          // 1) Reset UI ngay (cho cảm giác real-time)
-          form.reset();
-          Array.from(form.querySelectorAll("textarea")).forEach(
-            (el) => (el.value = "")
-          );
-          Array.from(form.querySelectorAll("select")).forEach((el) => {
-            if (el.querySelector('option[value=""]')) el.value = "";
-          });
-
-          // 2) Wipe trong Supabase
-          try {
-            isLocal = true;
-          } catch {}
-          await sb
-            .from(TABLE)
-            .upsert(
-              { id: ROW_ID, data: {}, updated_at: new Date().toISOString() },
-              { onConflict: "id" }
-            );
-          lastApply = Date.now();
-          isLocal = false;
-          setStatus("Đã xóa dữ liệu (Supabase).", "warn");
-        });
-
-        // cleanup
-        window.addEventListener("beforeunload", () => {
-          try {
-            sb.removeChannel(ch);
-          } catch {}
-        });
-      })();
-    </script>
-    <!-- ===== end DB-only ===== -->
   </body>
 </html>
