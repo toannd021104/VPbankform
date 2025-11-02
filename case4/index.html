@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VPBank - Báo Cáo Tuân Thủ</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Supabase SDK (UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <!-- Inline config (có thể override bằng ENV trên Vercel) -->
+    <script>
+      window.__SB_URL__ =
+        window.__SB_URL__ || "https://hjoislprylonxnmawbwo.supabase.co";
+      window.__SB_ANON__ =
+        window.__SB_ANON__ ||
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqb2lzbHByeWxvbnhubWF3YndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MDA2MzIsImV4cCI6MjA3NzQ3NjYzMn0._ZzZBYxpynKTM_Xw8-Jf8Wi53cJiTeE92u86osLIhEE";
+      window.__TABLE__ = window.__TABLE__ || "compliance_forms";
+      window.__ROW_ID__ =
+        window.__ROW_ID__ || "use-case-4-compliance-reporting";
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- novalidate + autocomplete="off" để tránh tự điền của trình duyệt -->
+      <form
+        id="complianceForm"
+        class="vpbank-form"
+        novalidate
+        autocomplete="off"
+      >
+        <div class="form-header">
+          <h1>Báo Cáo Tuân Thủ & Kiểm Toán</h1>
+          <p>Hệ thống quản lý rủi ro - Risk & Compliance</p>
+        </div>
+
+        <!-- Thông Tin Báo Cáo -->
+        <div class="form-section">
+          <h2>Thông Tin Báo Cáo</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reportId"
+                >Mã Báo Cáo <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="reportId"
+                name="reportId"
+                placeholder="BC-202410-001"
+              />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="reportType"
+                >Loại Báo Cáo <span class="required">*</span></label
+              >
+              <select id="reportType" name="reportType">
+                <option value="">-- Chọn loại báo cáo --</option>
+                <option value="aml">AML (Anti-Money Laundering)</option>
+                <option value="kyc">KYC (Know Your Customer)</option>
+                <option value="risk-assessment">Đánh giá rủi ro</option>
+                <option value="audit">Kiểm toán nội bộ</option>
+                <option value="regulatory">Báo cáo định kỳ NHNN</option>
+                <option value="fraud">Phát hiện gian lận</option>
+                <option value="other">Khác</option>
+              </select>
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reportingPeriod"
+                >Kỳ Báo Cáo <span class="required">*</span></label
+              >
+              <input type="month" id="reportingPeriod" name="reportingPeriod" />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="submissionDate"
+                >Ngày Nộp Báo Cáo <span class="required">*</span></label
+              >
+              <input type="date" id="submissionDate" name="submissionDate" />
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reportTitle"
+              >Tiêu Đề Báo Cáo <span class="required">*</span></label
+            >
+            <input
+              type="text"
+              id="reportTitle"
+              name="reportTitle"
+              placeholder="Báo cáo AML tháng 10/2025"
+            />
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Thông Tin Nhân Viên Tuân Thủ -->
+        <div class="form-section">
+          <h2>Thông Tin Nhân Viên Tuân Thủ</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="complianceOfficer"
+                >Tên Nhân Viên <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="complianceOfficer"
+                name="complianceOfficer"
+              />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="officerEmail">Email</label>
+              <input type="email" id="officerEmail" name="officerEmail" />
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="officerPosition">Chức Vụ</label>
+              <input type="text" id="officerPosition" name="officerPosition" />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="department">Phòng Ban</label>
+              <input type="text" id="department" name="department" />
+              <span class="error-message"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trạng Thái & Thống Kê -->
+        <div class="form-section">
+          <h2>Trạng Thái & Thống Kê</h2>
+
+          <div class="form-group">
+            <label for="status"
+              >Trạng Thái <span class="required">*</span></label
+            >
+            <select id="status" name="status">
+              <option value="">-- Chọn trạng thái --</option>
+              <option value="in-progress">Đang thực hiện</option>
+              <option value="completed">Hoàn thành</option>
+              <option value="under-review">Đang xem xét</option>
+              <option value="approved">Đã phê duyệt</option>
+              <option value="rejected">Từ chối</option>
+            </select>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="casesReviewed"
+                >Số Trường Hợp Đã Xem Xét <span class="required">*</span></label
+              >
+              <input
+                type="number"
+                id="casesReviewed"
+                name="casesReviewed"
+                min="0"
+              />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="highRiskCases">Trường Hợp Rủi Ro Cao</label>
+              <input
+                type="number"
+                id="highRiskCases"
+                name="highRiskCases"
+                min="0"
+              />
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="violationsFound"
+              >Vi Phạm Phát Hiện <span class="required">*</span></label
+            >
+            <select id="violationsFound" name="violationsFound">
+              <option value="">-- Chọn mức độ --</option>
+              <option value="none">Không có vi phạm</option>
+              <option value="minor">Vi phạm nhỏ</option>
+              <option value="major">Vi phạm nghiêm trọng</option>
+            </select>
+            <span class="error-message"></span>
+          </div>
+
+          <div
+            class="form-group"
+            id="violationDetailsGroup"
+            style="display: none"
+          >
+            <label for="violationDetails">Chi Tiết Vi Phạm</label>
+            <textarea
+              id="violationDetails"
+              name="violationDetails"
+              placeholder="Mô tả chi tiết các vi phạm phát hiện..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Hành Động Đã Thực Hiện -->
+        <div class="form-section">
+          <h2>Hành Động Đã Thực Hiện</h2>
+
+          <div class="form-group">
+            <label for="actionsTaken"
+              >Các Biện Pháp Đã Áp Dụng <span class="required">*</span></label
+            >
+            <textarea
+              id="actionsTaken"
+              name="actionsTaken"
+              placeholder="Mô tả các hành động, biện pháp đã thực hiện..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="preventiveMeasures">Biện Pháp Phòng Ngừa</label>
+            <textarea
+              id="preventiveMeasures"
+              name="preventiveMeasures"
+              placeholder="Các biện pháp đề xuất để phòng ngừa trong tương lai..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="followUpRequired">Cần Theo Dõi Tiếp</label>
+            <select id="followUpRequired" name="followUpRequired">
+              <option value="">-- Chọn --</option>
+              <option value="yes">Có</option>
+              <option value="no">Không</option>
+            </select>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group" id="followUpDateGroup" style="display: none">
+            <label for="followUpDate">Ngày Theo Dõi</label>
+            <input type="date" id="followUpDate" name="followUpDate" />
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Đánh Giá Rủi Ro -->
+        <div class="form-section">
+          <h2>Đánh Giá Rủi Ro</h2>
+
+          <div class="form-group">
+            <label for="overallRisk">Mức Độ Rủi Ro Tổng Thể</label>
+            <select id="overallRisk" name="overallRisk">
+              <option value="">-- Chọn --</option>
+              <option value="low">Thấp</option>
+              <option value="medium">Trung bình</option>
+              <option value="high">Cao</option>
+              <option value="critical">Nghiêm trọng</option>
+            </select>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="riskAnalysis">Phân Tích Rủi Ro</label>
+            <textarea
+              id="riskAnalysis"
+              name="riskAnalysis"
+              placeholder="Phân tích chi tiết về các rủi ro đã xác định..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Tài Liệu & Ghi Chú -->
+        <div class="form-section">
+          <h2>Tài Liệu & Ghi Chú</h2>
+
+          <div class="form-group">
+            <label for="attachments">File Đính Kèm</label>
+            <input type="file" id="attachments" name="attachments" multiple />
+            <small>Chấp nhận: PDF, Excel, Word (tối đa 10MB mỗi file)</small>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="referenceDocuments">Tài Liệu Tham Khảo</label>
+            <textarea
+              id="referenceDocuments"
+              name="referenceDocuments"
+              placeholder="Danh sách các tài liệu, quy định liên quan..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="executiveSummary">Tóm Tắt Báo Cáo</label>
+            <textarea
+              id="executiveSummary"
+              name="executiveSummary"
+              placeholder="Tóm tắt ngắn gọn nội dung chính của báo cáo..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="additionalNotes">Ghi Chú Thêm</label>
+            <textarea
+              id="additionalNotes"
+              name="additionalNotes"
+              placeholder="Các thông tin bổ sung khác..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="recommendations">Kiến Nghị</label>
+            <textarea
+              id="recommendations"
+              name="recommendations"
+              placeholder="Các kiến nghị, đề xuất cải thiện..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="clearBtn">
+            Xóa Form
+          </button>
+          <button type="button" class="btn-secondary" id="aiTestBtn">
+            Test AI
+          </button>
+          <button type="submit" class="btn-primary">Gửi Báo Cáo</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- App logic -->
+    <script src="script.js"></script>
+  </body>
+</html>

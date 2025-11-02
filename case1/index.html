@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VPBank - Đơn Vay Vốn & KYC</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Supabase SDK + embedded config (UMD bundle) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+      window.__SB_URL__ = "https://hjoislprylonxnmawbwo.supabase.co";
+      window.__SB_ANON__ =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhqb2lzbHByeWxvbnhubWF3YndvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MDA2MzIsImV4cCI6MjA3NzQ3NjYzMn0._ZzZBYxpynKTM_Xw8-Jf8Wi53cJiTeE92u86osLIhEE";
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <form id="loanOriginationForm" class="vpbank-form" novalidate>
+        <div class="form-header">
+          <h1>Đơn Vay Vốn & KYC</h1>
+          <p>Hệ thống cho vay bán lẻ - Retail Lending</p>
+        </div>
+
+        <!-- Customer Information -->
+        <div class="form-section">
+          <h2>Thông Tin Khách Hàng</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customerName">
+                Họ và Tên <span class="required">*</span>
+              </label>
+              <input type="text" id="customerName" name="customerName" />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="customerId">
+                Số CCCD/CMND <span class="required">*</span>
+              </label>
+              <input type="text" id="customerId" name="customerId" />
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phoneNumber">
+                Số Điện Thoại <span class="required">*</span>
+              </label>
+              <input type="tel" id="phoneNumber" name="phoneNumber" />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="email"> Email <span class="required">*</span> </label>
+              <input type="email" id="email" name="email" />
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">
+              Địa Chỉ Thường Trú <span class="required">*</span>
+            </label>
+            <textarea id="address" name="address"></textarea>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dateOfBirth">
+                Ngày Sinh <span class="required">*</span>
+              </label>
+              <input type="date" id="dateOfBirth" name="dateOfBirth" />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="gender">
+                Giới Tính <span class="required">*</span>
+              </label>
+              <select id="gender" name="gender">
+                <option value="">-- Chọn --</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+              </select>
+              <span class="error-message"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loan Information -->
+        <div class="form-section">
+          <h2>Thông Tin Khoản Vay</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="loanAmount">
+                Số Tiền Vay (VNĐ) <span class="required">*</span>
+              </label>
+              <input type="number" id="loanAmount" name="loanAmount" />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="loanTerm">
+                Kỳ Hạn <span class="required">*</span>
+              </label>
+              <select id="loanTerm" name="loanTerm">
+                <option value="">-- Chọn kỳ hạn --</option>
+                <option value="6">6 tháng</option>
+                <option value="12">12 tháng</option>
+                <option value="18">18 tháng</option>
+                <option value="24">24 tháng</option>
+                <option value="36">36 tháng</option>
+                <option value="48">48 tháng</option>
+                <option value="60">60 tháng</option>
+              </select>
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="loanPurpose">
+              Mục Đích Vay <span class="required">*</span>
+            </label>
+            <select id="loanPurpose" name="loanPurpose">
+              <option value="">-- Chọn mục đích --</option>
+              <option value="personal">Tiêu dùng cá nhân</option>
+              <option value="business">Kinh doanh</option>
+              <option value="education">Học tập</option>
+              <option value="home">Mua nhà</option>
+              <option value="vehicle">Mua xe</option>
+              <option value="renovation">Sửa chữa nhà</option>
+              <option value="other">Khác</option>
+            </select>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="applicationDate">
+              Ngày Đăng Ký <span class="required">*</span>
+            </label>
+            <input type="date" id="applicationDate" name="applicationDate" />
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Employment & Income -->
+        <div class="form-section">
+          <h2>Thông Tin Công Việc & Thu Nhập</h2>
+
+          <div class="form-group">
+            <label for="employmentStatus">
+              Tình Trạng Việc Làm <span class="required">*</span>
+            </label>
+            <select id="employmentStatus" name="employmentStatus">
+              <option value="">-- Chọn --</option>
+              <option value="employed">Đang làm việc</option>
+              <option value="self-employed">Tự kinh doanh</option>
+              <option value="unemployed">Chưa có việc làm</option>
+              <option value="retired">Đã nghỉ hưu</option>
+            </select>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="companyName"> Tên Công Ty/Nơi Làm Việc </label>
+              <input type="text" id="companyName" name="companyName" />
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="monthlyIncome">
+                Thu Nhập Hàng Tháng (VNĐ) <span class="required">*</span>
+              </label>
+              <input type="number" id="monthlyIncome" name="monthlyIncome" />
+              <span class="error-message"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="workAddress"> Địa Chỉ Nơi Làm Việc </label>
+            <textarea id="workAddress" name="workAddress"></textarea>
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Collateral Information -->
+        <div class="form-section">
+          <h2>Thông Tin Tài Sản Đảm Bảo</h2>
+
+          <div class="form-group">
+            <label for="collateralType">
+              Loại Tài Sản <span class="required">*</span>
+            </label>
+            <select id="collateralType" name="collateralType">
+              <option value="">-- Chọn loại tài sản --</option>
+              <option value="real-estate">Bất động sản</option>
+              <option value="vehicle">Xe cộ</option>
+              <option value="securities">Chứng khoán</option>
+              <option value="deposit">Tiền gửi</option>
+              <option value="none">Không có</option>
+            </select>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="collateralValue"> Giá Trị Tài Sản (VNĐ) </label>
+            <input type="number" id="collateralValue" name="collateralValue" />
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="collateralDescription"> Mô Tả Tài Sản </label>
+            <textarea
+              id="collateralDescription"
+              name="collateralDescription"
+              placeholder="Địa chỉ, biển số xe, mã chứng khoán, v.v."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="form-section">
+          <h2>Thông Tin Bổ Sung</h2>
+
+          <div class="form-group">
+            <label for="relationshipManager">
+              Tên Nhân Viên Quan Hệ (RM)
+            </label>
+            <input
+              type="text"
+              id="relationshipManager"
+              name="relationshipManager"
+            />
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="additionalNotes"> Ghi Chú Thêm </label>
+            <textarea
+              id="additionalNotes"
+              name="additionalNotes"
+              placeholder="Các thông tin bổ sung khác..."
+            ></textarea>
+            <span class="error-message"></span>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="clearBtn">
+            Xóa Form
+          </button>
+          <button type="button" class="btn-secondary" id="aiTestBtn">
+            Test AI
+          </button>
+          <button type="submit" class="btn-primary">Gửi Đơn</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Xác Nhận</h3>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc chắn muốn thực hiện thao tác này không?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary btn-cancel">Hủy</button>
+          <button type="button" class="btn-primary btn-confirm">
+            Xác Nhận
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- (Giữ nguyên nếu bạn đang dùng các file này) -->
+    <script src="../shared/utils.js"></script>
+    <script src="../shared/ai-integration.js"></script>
+    <script src="script.js"></script>
+    <!-- ĐÃ GỠ block auto-draft localStorage -->
+  </body>
+</html>
