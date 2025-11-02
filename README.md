@@ -1,4 +1,3 @@
-# VPbankform
 # 🏦 VPBank Forms - Bộ Demo Forms
 
 5 forms demo cho hệ thống Voice Bot tự động điền form.
@@ -9,11 +8,11 @@
 
 | STT | Tên Form | Mô tả | Link Demo |
 |-----|----------|-------|-----------|
-| 1 | 🏠 **Vay vốn** | Đơn vay tiền mua nhà/xe | [Xem](https://vpbankform-case1.vercel.app) |
-| 2 | 👤 **Khách hàng** | Quản lý thông tin KH | [Xem](https://vpbankform-case2.vercel.app) |
-| 3 | 💼 **Tuyển dụng** | Đơn ứng tuyển | [Xem](https://vpbankform-case3.vercel.app) |
-| 4 | 📊 **Báo cáo** | Báo cáo tuân thủ | [Xem](https://vpbankform-case4.vercel.app) |
-| 5 | ⚙️ **Giao dịch** | Xử lý giao dịch | [Xem](https://vpbankform-case5.vercel.app) |
+| 1 | 🏠 **Vay vốn** | Đơn vay tiền mua nhà/xe | [Xem](https://vpbank-shared-form-fastdeploy.vercel.app/) |
+| 2 | 👤 **Khách hàng** | Quản lý thông tin KH | [Xem](https://case2-ten.vercel.app/) |
+| 3 | 💼 **Tuyển dụng** | Đơn ứng tuyển | [Xem](https://case3-seven.vercel.app/) |
+| 4 | 📊 **Báo cáo** | Báo cáo tuân thủ | [Xem](https://case4-beta.vercel.app/) |
+| 5 | ⚙️ **Giao dịch** | Xử lý giao dịch | [Xem](https://case5-chi.vercel.app/) |
 
 ---
 
@@ -31,15 +30,12 @@
 
 ---
 
-## 🚀 Chạy thử trên máy
+## 🔗 Dùng với Voice Bot
 
-### Cách 1: Python Server
-
+### Thêm URLs vào file `.env`
 ````bash
-# Vào thư mục case1
-cd case1
-
-# Chạy server
-python3 -m http.server 8001
-
-# Mở trình duyệt: http://localhost:8001
+LOAN_FORM_URL=https://vpbank-shared-form-fastdeploy.vercel.app/
+CRM_FORM_URL=https://case2-ten.vercel.app/
+HR_FORM_URL=https://case3-seven.vercel.app/
+COMPLIANCE_FORM_URL=https://case4-beta.vercel.app/
+OPERATIONS_FORM_URL=https://case5-chi.vercel.app/
