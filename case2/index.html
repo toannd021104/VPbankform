@@ -2,13 +2,19 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>VPBank - Cập Nhật CRM & Log Tương Tác</title>
+
+    <!-- Font & Styles giống form 1 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700;800&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
 
-    <!-- Supabase SDK v2 (UMD) -->
+    <!-- Supabase SDK v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <!-- Supabase inline config for Case 2 -->
+    <!-- Config giữ nguyên -->
     <script>
       window.__SB_URL__ =
         window.__SB_URL__ || "https://hjoislprylonxnmawbwo.supabase.co";
@@ -19,37 +25,61 @@
       window.__TABLE__ = window.__TABLE__ || "crm_forms"; /* public.crm_forms */
     </script>
   </head>
+
   <body>
-    <div class="container">
+    <!-- HEADER -->
+    <header class="header">
+      <img class="brand-logo-img" src="logo.webp" alt="VPBank" />
+    </header>
+
+    <!-- MAIN: hero trái + form phải -->
+    <main class="form-wrapper">
+      <!-- Hero trái -->
+      <section class="left-content">
+        <div class="title-wrapper">
+          <h2>Cập nhật CRM</h2>
+        </div>
+        <p>
+          Chăm sóc khách hàng đa kênh<br />Ghi nhận tương tác & đánh giá hài
+          lòng theo thời gian thực
+        </p>
+      </section>
+
+      <!-- Form phải -->
       <form id="crmUpdateForm" class="vpbank-form" novalidate>
+        <!-- icon trang trí (tùy chọn) -->
+        <img
+          alt="ic_pen"
+          class="pen-icon"
+          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwOCIgdmlld0JveD0iMCAwIDEwMSAxMDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQo8cGF0aCBkPSJNODUuNDU4OSA3Mi4zODg4QzkwLjU4NTkgNzkuMzE0MiA3Ny40NDc5IDk4LjE1NzggNTUuMTc3MiA4MC43NjM4QzMwLjk1MTkgNjguNzg5NiA0MC42MjIgMTEyLjcyMyAyNy4yOTg5IDEwNi4zNjhDMTQuMjk4OCAxMDAuMTY3IC0yNC43NDM5IDM0LjM3OTYgMjcuMjk4OSA2OS4zMjg3IiBzdHJva2U9IiNENkRDRTgiIHN0cm9rZS13aWR0aD0iMS43MDA3NCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIzLjQgMy40Ii8+DQo8ZyBmaWx0ZXI9InVybCgjZmlsdGVyMF9kXzk3OV85NzgpIj4NCjxwYXRoIGQ9Ik04MC45MzYxIDYzLjkwOEM4Mi43NDQ5IDQ5LjgwMDMgODAuNDM5NiA0NS41Mzc2IDc4LjA4MzcgNDIuMjQxOEM3Ni43Nzk2IDQzLjc0NTEgNzUuODUzMSA0NS4wMDYzIDc1Ljg1MzEgNDUuMDA2M0M3Ni4wNzYyIDQ0LjcyOTggNzQuNzg2MSA0Mi40ODYzIDc0LjY2NTcgNDIuMjk2NUM3My40MDk4IDM5Ljg5NzYgNzIuMjc0MyAzNy42ODg2IDcwLjgyOTUgMzUuNDEwN0M2My4yNjI0IDI0LjEwODEgNTAuNjQ4NyAxNi41NzM3IDM3Ljc4MDEgMTIuNDA2M0MzNS4zNDA1IDExLjcwMDUgMzIuOTAwOSAxMC45OTQ3IDMwLjU0NzQgMTAuNjM0MUMyOS4zMTA1IDEwLjM1ODkgMjguMDM5MyAxMC4yMzkyIDI2LjgwMjQgOS45NjM5N0MyNi40OTMyIDkuODk1MTcgMjMuMjk4MiA5LjY3MzQ1IDIzLjM2NjcgOS4zNjI2MUMyNy42MDE5IDIxLjA2NTIgMjkuODkxOSAyNy42MDcgMjguMjY1OCAzNC4yNTU4QzMxLjk5MyAzNC4yNjk5IDMzLjc5NjUgMzQuMTgyIDM3Ljc0NTUgMzIuNDUyQzMzLjQ3NDUgMzkuMzI3NSAzMS4yNDE0IDM5LjE1NjcgMzEuMjQxNCAzOS4xNTY3QzMxLjI0MTQgMzkuMTU2NyAzNS45NzM1IDQ5LjMzOTYgNTcuOTE0OSA1Ny45NzFDNTUuOTI1MSA2MS4xMTUxIDU1LjA0OTQgNjEuNDA5MyA1NS4wNDk0IDYxLjQwOTNDNTUuMDQ5NCA2MS40MDkzIDY5LjI0MzUgNjkuMTMyMyA3OC44MDcgNjQuNzM4NkM4MC45MzYxIDYzLjkwOCA4MC45MzYxIDYzLjkwOCA4MC45MzYxIDYzLjkwOFoiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl85NzlfOTc4KSIvPg0KPC9nPg0KPHBhdGggZD0iTTg5LjIyOCA3OS4yODQ5QzgxLjM2NTYgNjQuMTY2NyA3MS43OTc2IDQyLjc5OTggNTIuODA1NCAyOC4xNEMzMy42OTI4IDEzLjI5MDUgMjAuNzU0NiA3Ljk2NjM3IDIwLjc1NDYgNy45NjYzN0wyMi40NTY2IDkuODEyMzZDMjIuNDU2NiA5LjgxMjM2IDQxLjM5MTkgMTguMTAxIDU3Ljc0MTYgMzUuOTIyN0M3My45NzA5IDUzLjU1NDUgODAuMzczMiA2OC42NzM5IDg0Ljg0NjggNzcuODIxQzg5LjIyOCA3OS4yODQ5IDg5LjIyOCA3OS4yODQ5IDg5LjIyOCA3OS4yODQ5WiIgZmlsbD0idXJsKCNwYWludDFfbGluZWFyXzk3OV85NzgpIi8+DQo8cGF0aCBkPSJNOTEuNTY3MiAzMS41MzA2TDg5LjgxMTQgMzAuOTk4NkM4OS42ODQyIDMwLjk2MTUgODkuNjg0MiAzMC43NzU5IDg5LjgxMTQgMzAuNzM4OEw5MS41NjcyIDMwLjIwNjhDOTEuNjEyMyAzMC4xOTQ1IDkxLjY0NTEgMzAuMTYxNSA5MS42NTc0IDMwLjExNjFMOTIuMTg2NiAyOC4zNTUzQzkyLjIyMzUgMjguMjI3NCA5Mi40MDgyIDI4LjIyNzQgOTIuNDQ1MSAyOC4zNTUzTDkyLjk3NDMgMzAuMTE2MUM5Mi45ODY2IDMwLjE2MTUgOTMuMDE5NCAzMC4xOTQ1IDkzLjA2NDUgMzAuMjA2OEw5NC44MTYyIDMwLjczODhDOTQuOTQzNCAzMC43NzU5IDk0Ljk0MzQgMzAuOTYxNSA5NC44MTYyIDMwLjk5ODZMOTMuMDYwNCAzMS41MzA2QzkzLjAxNTMgMzEuNTQzIDkyLjk4MjUgMzEuNTc1OSA5Mi45NzAyIDMxLjYyMTNMOTIuNDQxIDMzLjM4NjNDOTIuNDA0IDMzLjUxNDEgOTIuMjE5NCAzMy41MTQxIDkyLjE4MjUgMzMuMzg2M0w5MS42NTMzIDMxLjYyMTNDOTEuNjQ1MSAzMS41NzU5IDkxLjYxMjMgMzEuNTQzIDkxLjU2NzIgMzEuNTMwNloiIGZpbGw9IiNFQUVFRjkiLz4NCjxwYXRoIGQ9Ik01OS4wMDIxIDExLjQ3ODdMNTcuMjA2NSAxMS44NTNDNTcuMDc3MSAxMS44ODEzIDU2Ljk4OTEgMTEuNzE4MiA1Ny4wODMyIDExLjYyNDZMNTguMzc0IDEwLjMxNTJDNTguNDA3OCAxMC4yODI3IDU4LjQyMSAxMC4yMzggNTguNDEwMyAxMC4xOTIyTDU4LjAzOTkgOC4zOTA4NEM1OC4wMTE3IDguMjYwNzggNTguMTczOSA4LjE3MjI3IDU4LjI2NyA4LjI2NjkyTDU5LjU2NzcgOS41NjA4MUM1OS42IDkuNTk0NzcgNTkuNjQ0NSA5LjYwODAzIDU5LjY5MDEgOS41OTcyN0w2MS40ODIxIDkuMjI0OTFDNjEuNjExNSA5LjE5NjU2IDYxLjY5OTUgOS4zNTk2NiA2MS42MDU0IDkuNDUzMjVMNjAuMzE0NiAxMC43NjI3QzYwLjI4MDggMTAuNzk1MiA2MC4yNjc2IDEwLjgzOTkgNjAuMjc4MyAxMC44ODU3TDYwLjY1MDcgMTIuNjkwN0M2MC42Nzg5IDEyLjgyMDcgNjAuNTE2NyAxMi45MDkzIDYwLjQyMzUgMTIuODE0Nkw1OS4xMjA5IDExLjUxNzFDNTkuMDkyMiAxMS40ODEyIDU5LjA0NzcgMTEuNDY3OSA1OS4wMDIxIDExLjQ3ODdaIiBmaWxsPSIjRUFFRUY5Ii8+DQo8cGF0aCBkPSJNMjIuODk3NiA2Ny40NDE3TDIxLjUyNTcgNjYuMjE4NEMyMS40MjU4IDY2LjEzMTEgMjEuNTAzMiA2NS45NjI2IDIxLjYzNDEgNjUuOTgyNkwyMy40NSA2Ni4yNDAxQzIzLjQ5NjEgNjYuMjQ3OSAyMy41Mzk3IDY2LjIzMTggMjMuNTY5OCA2Ni4xOTU4TDI0Ljc4NDkgNjQuODIwNkMyNC44NzE4IDY0LjcyMDEgMjUuMDM5NCA2NC43OTc5IDI1LjAxOTUgNjQuOTI5NkwyNC43NjUyIDY2Ljc1MTFDMjQuNzU3NCA2Ni43OTc0IDI0Ljc3MzQgNjYuODQxMiAyNC44MDkyIDY2Ljg3MTVMMjYuMTc3NCA2OC4wOTNDMjYuMjc3MyA2OC4xODAzIDI2LjE5OTkgNjguMzQ4OCAyNi4wNjkgNjguMzI4OEwyNC4yNTMxIDY4LjA3MTNDMjQuMjA3IDY4LjA2MzUgMjQuMTYzNCA2OC4wNzk2IDI0LjEzMzMgNjguMTE1NkwyMi45MTY1IDY5LjQ5NDZDMjIuODI5NiA2OS41OTUgMjIuNjYyIDY5LjUxNzIgMjIuNjgxOCA2OS4zODU2TDIyLjkzNzkgNjcuNTYwM0MyMi45NDk0IDY3LjUxNTcgMjIuOTMzNCA2Ny40NzE5IDIyLjg5NzYgNjcuNDQxN1oiIGZpbGw9IiNFQUVFRjkiLz4NCjxwYXRoIGQ9Ik0zNS4yNjcyIDU4LjgyMzJMMzMuNzMwOSA1OC4zNTc3QzMzLjYxOTYgNTguMzI1MiAzMy42MTk2IDU4LjE2MjkgMzMuNzMwOSA1OC4xMzA0TDM1LjI2NzIgNTcuNjY1QzM1LjMwNjcgNTcuNjU0MSAzNS4zMzU0IDU3LjYyNTMgMzUuMzQ2MiA1Ny41ODU2TDM1LjgwOTIgNTYuMDQ0OUMzNS44NDE1IDU1LjkzMzEgMzYuMDAzMSA1NS45MzMxIDM2LjAzNTQgNTYuMDQ0OUwzNi40OTg0IDU3LjU4NTZDMzYuNTA5MiA1Ny42MjUzIDM2LjUzNzkgNTcuNjU0MSAzNi41Nzc0IDU3LjY2NUwzOC4xMTAxIDU4LjEzMDRDMzguMjIxNCA1OC4xNjI5IDM4LjIyMTQgNTguMzI1MiAzOC4xMTAxIDU4LjM1NzdMMzYuNTczOCA1OC44MjMyQzM2LjUzNDMgNTguODM0IDM2LjUwNTYgNTguODYyOSAzNi40OTQ4IDU4LjkwMjVMMzYuMDMxOCA2MC40NDY4QzM1Ljk5OTUgNjAuNTU4NyAzNS44Mzc5IDYwLjU1ODcgMzUuODA1NiA2MC40NDY4TDM1LjM0MjYgNTguOTAyNUMzNS4zMzU0IDU4Ljg2MjkgMzUuMzA2NyA1OC44MzQgMzUuMjY3MiA1OC44MjMyWiIgZmlsbD0iI0FBQjJDNSIvPg0KPHBhdGggZD0iTTYwLjkwMjUgNzUuMzM3OEw1OS4zNjYxIDc0LjgwNTlDNTkuMjU0OCA3NC43Njg3IDU5LjI1NDggNzQuNTgzMiA1OS4zNjYxIDc0LjU0NjFMNjAuOTAyNSA3NC4wMTQxQzYwLjk0MTkgNzQuMDAxNyA2MC45NzA3IDczLjk2ODcgNjAuOTgxNCA3My45MjM0TDYxLjQ0NDUgNzIuMTYyNUM2MS40NzY4IDcyLjAzNDcgNjEuNjM4MyA3Mi4wMzQ3IDYxLjY3MDYgNzIuMTYyNUw2Mi4xMzM3IDczLjkyMzRDNjIuMTQ0NSA3My45Njg3IDYyLjE3MzIgNzQuMDAxNyA2Mi4yMTI3IDc0LjAxNDFMNjMuNzQ1NCA3NC41NDYxQzYzLjg1NjcgNzQuNTgzMiA2My44NTY3IDc0Ljc2ODcgNjMuNzQ1NCA3NC44MDU5TDYyLjIwOTEgNzUuMzM3OEM2Mi4xNjk2IDc1LjM1MDIgNjIuMTQwOSA3NS4zODMyIDYyLjEzMDEgNzUuNDI4Nkw2MS42NjcgNzcuMTkzNUM2MS42MzQ3IDc3LjMyMTQgNjEuNDczMiA3Ny4zMjE0IDYxLjQ0MDkgNzcuMTkzNUw2MC45Nzc4IDc1LjQyODZDNjAuOTcwNyA3NS4zODMyIDYwLjk0MTkgNzUuMzUwMiA2MC45MDI1IDc1LjMzNzhaIiBmaWxsPSIjQUFCMkM1Ii8+DQo8cGF0aCBkPSJNODIuNjY3MyAzOC41OTQzTDgxLjU2OTkgMzguMjYxOEM4MS40OTA0IDM4LjIzODcgODEuNDkwNCAzOC4xMjI3IDgxLjU2OTkgMzguMDk5NUw4Mi42NjczIDM3Ljc2N0M4Mi42OTU1IDM3Ljc1OTMgODIuNzE2IDM3LjczODcgODIuNzIzNyAzNy43MTAzTDgzLjA1NDQgMzYuNjA5OUM4My4wNzc1IDM2LjUzIDgzLjE5MjkgMzYuNTMgODMuMjE2IDM2LjYwOTlMODMuNTQ2NyAzNy43MTAzQzgzLjU1NDQgMzcuNzM4NyA4My41NzQ5IDM3Ljc1OTMgODMuNjAzMSAzNy43NjdMODQuNjk4IDM4LjA5OTVDODQuNzc3NCAzOC4xMjI3IDg0Ljc3NzQgMzguMjM4NyA4NC42OTggMzguMjYxOEw4My42MDA2IDM4LjU5NDNDODMuNTcyNCAzOC42MDIgODMuNTUxOSAzOC42MjI2IDgzLjU0NDIgMzguNjUxTDgzLjIxMzQgMzkuNzU0QzgzLjE5MDMgMzkuODMzOSA4My4wNzUgMzkuODMzOSA4My4wNTE5IDM5Ljc1NEw4Mi43MjExIDM4LjY1MUM4Mi43MTYgMzguNjIyNiA4Mi42OTU1IDM4LjYwMiA4Mi42NjczIDM4LjU5NDNaIiBmaWxsPSIjQUFCMkM1Ii8+DQo8cGF0aCBkPSJNMjEuMzYzMSA0MS44OTk4TDIwLjI2NTcgNDEuNTY3M0MyMC4xODYyIDQxLjU0NDEgMjAuMTg2MiA0MS40MjgyIDIwLjI2NTcgNDEuNDA1TDIxLjM2MzEgNDEuMDcyNUMyMS4zOTEzIDQxLjA2NDggMjEuNDExOCA0MS4wNDQyIDIxLjQxOTUgNDEuMDE1OEwyMS43NTAyIDM5LjkxNTRDMjEuNzczMyAzOS44MzU1IDIxLjg4ODcgMzkuODM1NSAyMS45MTE4IDM5LjkxNTRMMjIuMjQyNSA0MS4wMTU4QzIyLjI1MDIgNDEuMDQ0MiAyMi4yNzA3IDQxLjA2NDggMjIuMjk4OSA0MS4wNzI1TDIzLjM5MzggNDEuNDA1QzIzLjQ3MzIgNDEuNDI4MiAyMy40NzMyIDQxLjU0NDEgMjMuMzkzOCA0MS41NjczTDIyLjI5NjQgNDEuODk5OEMyMi4yNjgyIDQxLjkwNzUgMjIuMjQ3NyA0MS45MjgxIDIyLjI0IDQxLjk1NjVMMjEuOTA5MiA0My4wNTk1QzIxLjg4NjEgNDMuMTM5NCAyMS43NzA4IDQzLjEzOTQgMjEuNzQ3NyA0My4wNTk1TDIxLjQxNjkgNDEuOTU2NUMyMS40MTE4IDQxLjkyODEgMjEuMzkxMyA0MS45MDc1IDIxLjM2MzEgNDEuODk5OFoiIGZpbGw9IiNFQUVFRjkiLz4NCjxwYXRoIGQ9Ik03NC41NTY0IDIzLjIxNzNMNzMuNDU5MSAyMi44ODQ4QzczLjM3OTYgMjIuODYxNiA3My4zNzk2IDIyLjc0NTYgNzMuNDU5MSAyMi43MjI1TDc0LjU1NjQgMjIuMzlDNzQuNTg0NiAyMi4zODIzIDc0LjYwNTIgMjIuMzYxNyA3NC42MTI5IDIyLjMzMzNMNzQuOTQzNiAyMS4yMzI5Qzc0Ljk2NjcgMjEuMTUzIDc1LjA4MjEgMjEuMTUzIDc1LjEwNTEgMjEuMjMyOUw3NS40MzU5IDIyLjMzMzNDNzUuNDQzNiAyMi4zNjE3IDc1LjQ2NDEgMjIuMzgyMyA3NS40OTIzIDIyLjM5TDc2LjU4NzEgMjIuNzIyNUM3Ni42NjY2IDIyLjc0NTYgNzYuNjY2NiAyMi44NjE2IDc2LjU4NzEgMjIuODg0OEw3NS40ODk3IDIzLjIxNzNDNzUuNDYxNSAyMy4yMjUgNzUuNDQxIDIzLjI0NTYgNzUuNDMzMyAyMy4yNzRMNzUuMTAyNiAyNC4zNzdDNzUuMDc5NSAyNC40NTY5IDc0Ljk2NDEgMjQuNDU2OSA3NC45NDEgMjQuMzc3TDc0LjYxMDMgMjMuMjc0Qzc0LjYwNTIgMjMuMjQ1NiA3NC41ODQ2IDIzLjIyNSA3NC41NTY0IDIzLjIxNzNaIiBmaWxsPSIjQUFCMkM1Ii8+DQo8cGF0aCBkPSJNOTAuODk4NyA2MC4yNjAyTDg5LjgwMTMgNTkuOTI3N0M4OS43MjE5IDU5LjkwNDUgODkuNzIxOSA1OS43ODg1IDg5LjgwMTMgNTkuNzY1M0w5MC44OTg3IDU5LjQzMjlDOTAuOTI2OSA1OS40MjUyIDkwLjk0NzQgNTkuNDA0NSA5MC45NTUxIDU5LjM3NjJMOTEuMjg1OSA1OC4yNzU4QzkxLjMwOSA1OC4xOTU5IDkxLjQyNDMgNTguMTk1OSA5MS40NDc0IDU4LjI3NThMOTEuNzc4MiA1OS4zNzYyQzkxLjc4NTkgNTkuNDA0NSA5MS44MDY0IDU5LjQyNTIgOTEuODM0NiA1OS40MzI5TDkyLjkyOTQgNTkuNzY1M0M5My4wMDg5IDU5Ljc4ODUgOTMuMDA4OSA1OS45MDQ1IDkyLjkyOTQgNTkuOTI3N0w5MS44MzIgNjAuMjYwMkM5MS44MDM4IDYwLjI2NzkgOTEuNzgzMyA2MC4yODg1IDkxLjc3NTYgNjAuMzE2OUw5MS40NDQ5IDYxLjQxOTlDOTEuNDIxOCA2MS40OTk4IDkxLjMwNjQgNjEuNDk5OCA5MS4yODMzIDYxLjQxOTlMOTAuOTUyNiA2MC4zMTY5QzkwLjk0NzQgNjAuMjg4NSA5MC45MjY5IDYwLjI2NzkgOTAuODk4NyA2MC4yNjAyWiIgZmlsbD0iI0VBRUVGOSIvPg0KPGRlZnM+DQo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2RfOTc5Xzk3OCIgeD0iNC42NTczOSIgeT0iMC4wMDg1NjU5IiB3aWR0aD0iOTUuNjM1NCIgaGVpZ2h0PSI5NC4xNDQiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4NCjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+DQo8ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIgcmVzdWx0PSJoYXJkQWxwaGEiLz4NCjxmZU9mZnNldCBkeT0iOS4zNTQwNCIvPg0KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iOS4zNTQwNCIvPg0KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMC4zOTc3MDggMCAwIDAgMCAwLjQ3NzQ5IDAgMCAwIDAgMC41NzUgMCAwIDAgMC4yNyAwIi8+DQo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvd185NzlfOTc4Ii8+DQo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvd185NzlfOTc4IiByZXN1bHQ9InNoYXBlIi8+DQo8L2ZpbHRlcj4NCjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl85NzlfOTc4IiB4MT0iNTYuODYzOCIgeTE9IjE1LjMzNTciIHgyPSI0Ni41NzQ1IiB5Mj0iNjEuNTgzMyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPg0KPHN0b3Agc3RvcC1jb2xvcj0iI0ZERkVGRiIvPg0KPHN0b3Agb2Zmc2V0PSIwLjk5NjQiIHN0b3AtY29sb3I9IiNFQ0YwRjUiLz4NCjwvbGluZWFyR3JhZGllbnQ+DQo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MV9saW5lYXJfOTc5Xzk3OCIgeDE9Ijk1LjE0OTUiIHkxPSI1Mi41NjYzIiB4Mj0iMTQuODEzOCIgeTI9IjM0Ljg3NzkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4NCjxzdG9wIHN0b3AtY29sb3I9IiM4NTk0QjMiLz4NCjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzk5RUFDMiIvPg0KPC9saW5lYXJHcmFkaWVudD4NCjwvZGVmcz4NCjwvc3ZnPg0K"
+        />
+
         <div class="form-header">
-          <h1>Cập Nhật CRM & Log Tương Tác</h1>
-          <p>Hệ thống chăm sóc khách hàng - Customer Service</p>
+          <h1 class="form-title-gradient">Cập nhật CRM Khách Hàng</h1>
         </div>
 
-        <!-- Wizard Progress -->
+        <!-- Wizard Progress (ẩn bằng CSS) -->
         <div class="wizard-progress">
           <div class="wizard-steps">
-            <div class="wizard-step is-active" data-step="1">Thông tin KH</div>
-            <div class="wizard-step" data-step="2">Tương tác</div>
-            <div class="wizard-step" data-step="3">Giải quyết & Đánh giá</div>
+            <div class="wizard-step is-active" data-step="1">
+              KH & Tương tác
+            </div>
+            <div class="wizard-step" data-step="2">Giải quyết & Đánh giá</div>
           </div>
           <div class="wizard-bar">
-            <div class="wizard-bar-fill" style="width: 33%"></div>
+            <div class="wizard-bar-fill" style="width: 50%"></div>
           </div>
         </div>
 
-        <!-- STEP 1: Customer Information -->
+        <!-- STEP 1: Gộp Thông tin KH + Tương tác -->
         <section class="wizard-step-pane" data-step="1">
           <div class="form-section">
-            <h2>Thông Tin Khách Hàng</h2>
-
+            <!-- Thông tin KH -->
             <div class="form-row">
               <div class="form-group">
                 <label for="customerName">Họ và Tên</label>
                 <input type="text" id="customerName" name="customerName" />
               </div>
-
               <div class="form-group">
                 <label for="customerId">Mã Khách Hàng</label>
                 <input type="text" id="customerId" name="customerId" />
@@ -61,7 +91,6 @@
                 <label for="phoneNumber">Số Điện Thoại</label>
                 <input type="tel" id="phoneNumber" name="phoneNumber" />
               </div>
-
               <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" />
@@ -76,20 +105,8 @@
                 placeholder="Cập nhật địa chỉ mới nếu có thay đổi"
               ></textarea>
             </div>
-          </div>
 
-          <div class="form-actions">
-            <button type="button" class="btn-primary wizard-next">
-              Tiếp tục
-            </button>
-          </div>
-        </section>
-
-        <!-- STEP 2: Interaction Details -->
-        <section class="wizard-step-pane is-hidden" data-step="2">
-          <div class="form-section">
-            <h2>Chi Tiết Tương Tác</h2>
-
+            <!-- Chi tiết tương tác -->
             <div class="form-row">
               <div class="form-group">
                 <label for="interactionType">Loại Tương Tác</label>
@@ -102,7 +119,6 @@
                   <option value="sms">SMS</option>
                 </select>
               </div>
-
               <div class="form-group">
                 <label for="interactionDate">Ngày Tương Tác</label>
                 <input
@@ -113,16 +129,14 @@
               </div>
             </div>
 
+            <!-- Thời gian: chọn nhanh + tùy nhập -->
             <div class="form-row">
               <div class="form-group">
-                <label for="interactionTime">Thời Gian</label>
-                <input
-                  type="time"
-                  id="interactionTime"
-                  name="interactionTime"
-                />
+                <label for="timeSlot">Thời Gian</label>
+                <select id="timeSlot" name="timeSlot">
+                  <option value="">-- Chọn khung giờ --</option>
+                </select>
               </div>
-
               <div class="form-group">
                 <label for="duration">Thời Lượng (phút)</label>
                 <input
@@ -135,28 +149,28 @@
               </div>
             </div>
 
+            <!-- input hidden/hiện khi 'Tự nhập' để GIỮ field gốc cho logic -->
+            <div class="form-group" id="customTimeWrap" style="display: none">
+              <label for="interactionTime">Nhập giờ khác</label>
+              <input type="time" id="interactionTime" name="interactionTime" />
+            </div>
+
             <div class="form-group">
               <label for="agentName">Tên Nhân Viên</label>
               <input type="text" id="agentName" name="agentName" />
             </div>
           </div>
 
-          <div class="form-actions">
-            <button type="button" class="btn-secondary wizard-prev">
-              Quay lại
-            </button>
-            <button type="button" class="btn-primary wizard-next">
+          <div class="form-actions form-actions--right">
+            <button type="button" class="btn btn-neutral wizard-next">
               Tiếp tục
             </button>
           </div>
         </section>
 
-        <!-- STEP 3: Issue, Resolution & Satisfaction -->
-        <section class="wizard-step-pane is-hidden" data-step="3">
-          <!-- Issue & Resolution -->
+        <!-- STEP 2: Vấn đề + Hài lòng + Ghi chú -->
+        <section class="wizard-step-pane is-hidden" data-step="2">
           <div class="form-section">
-            <h2>Vấn Đề & Giải Quyết</h2>
-
             <div class="form-group">
               <label for="issueCategory">Danh Mục Vấn Đề</label>
               <select id="issueCategory" name="issueCategory">
@@ -202,10 +216,7 @@
             </div>
           </div>
 
-          <!-- Customer Satisfaction -->
           <div class="form-section">
-            <h2>Đánh Giá Khách Hàng</h2>
-
             <div class="form-row">
               <div class="form-group">
                 <label for="satisfactionRating">Mức Độ Hài Lòng</label>
@@ -218,7 +229,6 @@
                   <option value="1">⭐ Rất không hài lòng</option>
                 </select>
               </div>
-
               <div class="form-group">
                 <label for="followUpRequired">Cần Theo Dõi</label>
                 <select id="followUpRequired" name="followUpRequired">
@@ -235,10 +245,7 @@
             </div>
           </div>
 
-          <!-- Additional Notes -->
           <div class="form-section">
-            <h2>Ghi Chú</h2>
-
             <div class="form-group">
               <label for="notes">Ghi Chú Thêm</label>
               <textarea
@@ -247,7 +254,6 @@
                 placeholder="Các thông tin bổ sung, lưu ý đặc biệt..."
               ></textarea>
             </div>
-
             <div class="form-group">
               <label for="tags">Tags (phân cách bằng dấu phẩy)</label>
               <input
@@ -259,19 +265,78 @@
             </div>
           </div>
 
-          <div class="form-actions">
-            <button type="button" class="btn-secondary" id="clearBtn">
-              Xóa Form
-            </button>
-            <button type="button" class="btn-secondary wizard-prev">
+          <div class="form-actions form-actions--final">
+            <!-- Bỏ nút Xóa Form -->
+            <button type="button" class="btn btn-neutral wizard-prev">
               Quay lại
             </button>
-            <button type="submit" class="btn-primary">Gửi đơn</button>
+            <button type="submit" class="btn btn-cta">Gửi Đơn</button>
           </div>
         </section>
       </form>
-    </div>
+    </main>
 
+    <!-- Bridge nhỏ: map 'timeSlot' -> interactionTime (giữ nguyên logic script.js) -->
+    <script>
+      (function () {
+        const slot = document.getElementById("timeSlot");
+        const customWrap = document.getElementById("customTimeWrap");
+        const timeInput = document.getElementById("interactionTime");
+
+        // Fill khung giờ 08:00 -> 20:30 mỗi 15'
+        function fillSlots() {
+          const start = 8 * 60,
+            end = 20 * 60 + 30;
+          const frag = document.createDocumentFragment();
+          for (let m = start; m <= end; m += 15) {
+            const hh = String(Math.floor(m / 60)).padStart(2, "0");
+            const mm = String(m % 60).padStart(2, "0");
+            const opt = document.createElement("option");
+            opt.value = `${hh}:${mm}`;
+            opt.textContent = `${hh}:${mm}`;
+            frag.appendChild(opt);
+          }
+          const other = document.createElement("option");
+          other.value = "__custom__";
+          other.textContent = "Tự nhập…";
+          frag.appendChild(other);
+          slot.appendChild(frag);
+        }
+
+        function nearest15(date = new Date()) {
+          const m = date.getMinutes();
+          const rounded = Math.round(m / 15) * 15;
+          date.setMinutes(rounded);
+          date.setSeconds(0);
+          return `${String(date.getHours()).padStart(2, "0")}:${String(
+            date.getMinutes()
+          ).padStart(2, "0")}`;
+        }
+
+        function apply(val) {
+          if (!timeInput) return;
+          if (val === "__custom__") {
+            customWrap.style.display = "";
+            if (!timeInput.value) timeInput.value = nearest15();
+          } else if (val) {
+            customWrap.style.display = "none";
+            timeInput.value = val; // GIỮ field gốc cho serialize/upsert
+          } else {
+            customWrap.style.display = "none";
+            timeInput.value = "";
+          }
+        }
+
+        fillSlots();
+        const init = nearest15();
+        slot.value = init;
+        apply(init);
+
+        slot.addEventListener("change", (e) => apply(e.target.value));
+      })();
+    </script>
+
+    <!-- Logic gốc (wizard + Supabase realtime) -->
     <script src="script.js"></script>
   </body>
 </html>

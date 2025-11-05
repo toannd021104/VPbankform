@@ -152,6 +152,11 @@ button {
   background: #f2f4f7;
   font-weight: 600;
   opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.wizard-step:hover {
+  opacity: 0.8;
 }
 .wizard-step.is-active,
 .wizard-step.is-done {

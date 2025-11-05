@@ -58,6 +58,15 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("click", (e) => {
     if (e.target.closest(".wizard-next")) setStep(current + 1);
     if (e.target.closest(".wizard-prev")) setStep(current - 1);
+
+    // Thêm tính năng click vào step để chuyển trang
+    if (e.target.closest(".wizard-step")) {
+      const clickedStep = e.target.closest(".wizard-step");
+      const stepNumber = Number(clickedStep.dataset.step);
+      if (stepNumber && stepNumber >= 1 && stepNumber <= total) {
+        setStep(stepNumber);
+      }
+    }
   });
 
   // Submit ngay lập tức, không chặn, không hỏi

@@ -1,150 +1,251 @@
-/* VPBank Forms - Shared Styles */
-
-/* CSS Variables */
-:root {
-  --primary-color: #00b14f;
-  --secondary-color: #0066cc;
-  --accent-color: #ff6b00;
-  --text-color: #333333;
-  --text-secondary: #666666;
-  --background: #ffffff;
-  --background-alt: #f5f5f5;
-  --border-color: #dddddd;
-  --error-color: #dc3545;
-  --success-color: #28a745;
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Reset & Base Styles */
-* {
-  margin: 0;
-  padding: 0;
+/* ===================== BASE ===================== */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 14px;
   line-height: 1.6;
-  color: var(--text-color);
-  background: url("bg.webp") no-repeat center/cover fixed;
-  background-color: var(--background-alt);
+  color: #343434;
+  background: url("bg.jpg") no-repeat top center fixed;
+  background-size: 100% auto;
+  background-color: #f5f5f5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Container */
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+/* ===================== HEADER ===================== */
+.header {
+  position: relative;
+  z-index: 999;
+  max-width: 1200px;
+  margin: 24px auto 0;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: transparent;
+}
+.brand-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+@media (max-width: 599px) {
+  .brand-logo-img {
+    height: 28px;
+  }
 }
 
-/* Form Styles */
+/* ===================== LAYOUT ===================== */
+.form-wrapper {
+  max-width: 1200px;
+  margin: 57px auto 0;
+  padding: 0 24px;
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  position: relative;
+}
+@media (max-width: 899px) {
+  .form-wrapper {
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 32px;
+  }
+}
+
+/* ===================== HERO (trái) ===================== */
+.left-content {
+  flex: 1;
+  color: #fff;
+  margin-top: 112px;
+  text-align: right;
+}
+.left-content .title-wrapper {
+  line-height: 67px;
+}
+
+.left-content h2 {
+  margin: 0;
+  font-size: 64px;
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-weight: 800;
+  line-height: 67px;
+  background: none !important;
+  -webkit-text-fill-color: #fdfdfd !important;
+  color: #fdfdfd !important;
+}
+.left-content h2.light {
+  background: none !important;
+  -webkit-text-fill-color: #fff !important;
+  color: #fff !important;
+  font-weight: 300 !important;
+}
+.left-content p {
+  margin-top: 24px;
+  font-size: 20px;
+  line-height: 32px;
+  font-family: "Be Vietnam Pro", sans-serif;
+  font-weight: 400;
+}
+
+@media (max-width: 1059px) {
+  .left-content h2 {
+    font-size: 60px;
+  }
+  .left-content p {
+    font-size: 21px;
+  }
+}
+@media (max-width: 899px) {
+  .left-content {
+    width: 100%;
+    margin-top: 0;
+    text-align: left;
+  }
+  .left-content h2 {
+    font-size: 72px;
+  }
+  .left-content p {
+    font-size: 24px;
+  }
+}
+@media (max-width: 599px) {
+  .left-content h2 {
+    font-size: 48px;
+    line-height: 50px;
+  }
+  .left-content p {
+    font-size: 18px;
+    margin-top: 21px;
+    line-height: 32px;
+  }
+}
+
+/* ===================== FORM (phải) ===================== */
 .vpbank-form {
-  background: var(--background);
-  border-radius: 8px;
-  box-shadow: var(--shadow-lg);
-  padding: 30px;
-  margin: 20px 0;
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  color: #343434;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2), inset 0 4px 0 #fbea58;
+  position: relative;
 }
 
+/* Bút trang trí (tuỳ chọn) */
+.pen-icon {
+  position: absolute;
+  top: -13px;
+  left: -43px;
+  height: auto;
+  width: auto;
+}
+@media (max-width: 899px) {
+  .pen-icon {
+    top: -54px;
+    left: -15px;
+  }
+}
+@media (max-width: 599px) {
+  .pen-icon {
+    top: -32px;
+    left: -16px;
+  }
+}
+@media (max-width: 480px) {
+  .pen-icon {
+    width: 64px;
+  }
+}
+
+/* Header form */
 .form-header {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid var(--primary-color);
+  text-align: center;
+  padding-bottom: 24px;
 }
-
 .form-header h1 {
-  color: var(--primary-color);
-  font-size: 28px;
-  margin-bottom: 10px;
+  margin: 8px 0 0;
+  color: #343434;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 47px;
+  text-transform: uppercase;
+}
+.form-title-gradient {
+  background: linear-gradient(
+    89.21deg,
+    rgb(38, 60, 135) 10.58%,
+    rgb(1, 176, 85) 93.7%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 35px;
+}
+@media (max-width: 600px) {
+  .form-title-gradient {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
 }
 
-.form-header p {
-  color: var(--text-secondary);
-  font-size: 16px;
+/* Fields */
+.form-section {
+  margin-bottom: 20px;
 }
-
-/* Wizard Styles */
-.wizard-progress {
+.form-group {
+  position: relative;
   margin-bottom: 16px;
 }
-.wizard-steps {
-  display: flex;
-  gap: 8px;
-}
-.wizard-step {
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: #f2f4f7;
-  font-weight: 600;
-  opacity: 0.6;
-}
-.wizard-step.is-active,
-.wizard-step.is-done {
-  opacity: 1;
-  background: #e6f4ff;
-}
-.wizard-bar {
-  height: 6px;
-  background: #eef2f6;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 8px;
-}
-.wizard-bar-fill {
-  height: 100%;
-  background: #1677ff;
-  width: 0;
-  transition: width 0.25s ease;
-}
-.wizard-step-pane.is-hidden {
-  display: none;
-}
-.wizard-navigation {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
-}
-
-/* Form Sections */
-.form-section {
-  margin-bottom: 30px;
-}
-
-.form-section h2 {
-  font-size: 20px;
-  color: var(--secondary-color);
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* Form Groups */
-.form-group {
-  margin-bottom: 20px;
-}
-
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 16px;
+}
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text-color);
+  position: absolute;
+  top: -7px;
+  left: 13px;
+  padding: 0 3px;
+  font-size: 12px;
+  background: #fff;
+  color: #000;
+  z-index: 10;
+  font-family: "Inter", system-ui, sans-serif;
+  line-height: 13px;
+  pointer-events: none;
+  max-width: calc(100% - 26px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+label .required {
+  color: #dc3545;
+  margin-left: 2px;
 }
 
-/* Đã xóa .required class */
-
-/* Input Styles */
 input[type="text"],
 input[type="email"],
 input[type="tel"],
@@ -153,97 +254,217 @@ input[type="date"],
 select,
 textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 15px;
-  font-family: inherit;
-  transition: border-color 0.3s ease;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid #cdcdcd;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: "Inter", system-ui, sans-serif;
+  color: #343434;
+  background: #fff;
+  transition: border-color 0.2s;
 }
-
+textarea {
+  min-height: 80px;
+  padding: 12px 16px;
+  resize: vertical;
+}
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(0, 177, 79, 0.1);
+  border-color: #00b14f;
+}
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23343434' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
 }
 
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Buttons */
+/* ===================== Buttons ===================== */
 button {
-  padding: 12px 30px;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
+.btn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Inter", system-ui, sans-serif;
+  transition: box-shadow 0.2s, background-color 0.2s, border-color 0.2s,
+    transform 0.02s;
+}
+.btn:active {
+  transform: translateY(0.5px);
+}
+
+/* Nút trung tính: dùng cho Tiếp tục / Quay lại */
+.btn-neutral {
+  background: #00b74f;
+  color: #ffffff;
+  border: 1px solid #00b74f;
+}
+.btn-neutral:hover {
+  background: #009440;
+  border-color: #009440;
+}
+.btn-neutral:focus-visible {
+  outline: 2px solid #a8eec3;
+  outline-offset: 2px;
+}
+
+/* Nút Quay lại - màu trắng */
+.wizard-prev.btn-neutral {
+  background: #ffffff;
+  color: #343434;
+  border: 1px solid #cdcdcd;
+}
+.wizard-prev.btn-neutral:hover {
+  background: #f6f7f8;
+  border-color: #c7c7c7;
+}
+
+/* Nút CTA: chỉ dùng cho "Gửi Đơn" */
+.btn-cta {
+  color: #ffffff;
+  border: none;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(270deg, #00b74f -22.41%, #1d4289 108.33%);
+  box-shadow: 0 12px 28px rgba(0, 177, 79, 0.18);
+}
+.btn-cta:hover {
+  background: linear-gradient(270deg, #009440 -22.41%, #152e5e 108.33%);
+  box-shadow: 0 12px 32px rgba(0, 177, 79, 0.28);
+}
+.btn-cta:focus-visible {
+  outline: 2px solid #a8eec3;
+  outline-offset: 3px;
+}
+.btn-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Backward compatibility với class cũ */
 .btn-primary {
-  background-color: var(--primary-color);
-  color: white;
+  color: #ffffff;
+  border: none;
+  height: 48px;
+  padding: 0 28px;
+  border-radius: 100px;
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(270deg, #00b74f -22.41%, #1d4289 108.33%);
+  box-shadow: 0 12px 28px rgba(0, 177, 79, 0.18);
+  flex: 1;
+  max-width: 260px;
 }
-
 .btn-primary:hover {
-  background-color: #009440;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(270deg, #009440 -22.41%, #152e5e 108.33%);
+  box-shadow: 0 12px 32px rgba(0, 177, 79, 0.28);
 }
 
 .btn-secondary {
-  background-color: var(--background-alt);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
+  background: #fff;
+  color: #343434;
+  border: 1px solid #cdcdcd;
+  min-width: 100px;
+  height: 40px;
+  padding: 0 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
 }
-
 .btn-secondary:hover {
-  background-color: #e5e5e5;
+  background: #f5f5f5;
 }
 
-.btn-danger {
-  background-color: var(--error-color);
-  color: white;
+/* ===================== Actions layout ===================== */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
 }
 
-.btn-danger:hover {
-  background-color: #c82333;
+/* Step 1: 1 nút -> đẩy sang phải */
+.form-actions--right {
+  justify-content: flex-end;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    padding: 10px;
-  }
+/* Step 2: 2 nút -> gần nhau bên phải */
+.form-actions--between {
+  justify-content: flex-end;
+  gap: 12px;
+}
 
-  .vpbank-form {
-    padding: 20px;
-  }
+/* Step 3: Gửi Đơn góc phải */
+.form-actions--final {
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+.form-actions--final .btn-neutral {
+  min-width: 120px;
+  height: 44px;
+}
+.form-actions--final .btn-cta {
+  min-width: 120px;
+  height: 44px;
+}
 
-  .form-header h1 {
-    font-size: 24px;
-  }
+/* Thu gọn khoảng trống cuối form */
+.vpbank-form .form-group:last-of-type {
+  margin-bottom: 12px;
+}
 
-  .form-row {
-    grid-template-columns: 1fr;
+/* Mobile: xếp dọc, full width */
+@media (max-width: 600px) {
+  .form-actions--between {
+    justify-content: space-between;
   }
-
-  .wizard-navigation {
-    flex-direction: column;
-    gap: 15px;
+  .form-actions--final {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
-
-  button {
+  .form-actions--final .btn-neutral,
+  .form-actions--final .btn-cta {
     width: 100%;
   }
+}
 
-  .wizard-steps {
-    flex-direction: column;
-    gap: 4px;
+/* Wizard */
+.wizard-progress {
+  display: none;
+}
+.wizard-step-pane.is-hidden {
+  display: none;
+}
+
+/* --- Fix tách dấu tiếng Việt cho chữ lớn dùng gradient --- */
+.left-content h2,
+.form-title-gradient {
+  font-feature-settings: "ccmp" 1, "kern" 1, "liga" 1; /* ghép dấu */
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0;
+  -webkit-text-stroke: 0.25px transparent; /* ép WebKit vẽ lại glyph */
+  text-shadow: 0 0 0.01px rgba(0, 0, 0, 0.01); /* hack chống tách dấu */
+}
+
+/* Nếu Safari/iOS vẫn còn tách, fallback bỏ gradient (giữ màu gần giống) */
+@supports (-webkit-touch-callout: none) {
+  .left-content h2 {
+    background: none !important;
+    -webkit-text-fill-color: #e9eff2 !important;
   }
 }
