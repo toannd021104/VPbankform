@@ -45,6 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (e.target.closest("#clearBtn")) {
+      // Blur form area (không blur toast)
+      document.querySelector("main").style.filter = "blur(2px)";
+
+      // Reset form
       form.reset();
       form.querySelectorAll("textarea").forEach((el) => (el.value = ""));
       form.querySelectorAll("select").forEach((el) => {
@@ -52,19 +56,67 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       if (applicationDateField)
         applicationDateField.value = new Date().toISOString().split("T")[0];
+
+      // Quay lại step 1
       setStep(1);
-      // Đồng bộ Supabase (nếu có) — phát sự kiện change để các listener khác bắt được
+
+      // Remove blur sau 0.4 giây
+      setTimeout(() => {
+        document.querySelector("main").style.filter = "none";
+      }, 400);
+
+      // Đồng bộ Supabase
       document.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
 
-  // Submit ngay lập tức, không chặn, không hỏi
-  form.addEventListener("submit", () => {
-    // cho phép submit mặc định
+  // Submit ngay lập tức, hiển thị Toast
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Hiển thị Toast
+    showToast("✓ Đăng ký vay thành công");
+
+    // Blur form area (không blur toast)
+    document.querySelector("main").style.filter = "blur(2px)";
+
+    // Reset form ngay
+    form.reset();
+
+    // Quay lại step 1 ngay
+    setStep(1);
+
+    // Remove blur sau 0.4 giây
+    setTimeout(() => {
+      document.querySelector("main").style.filter = "none";
+    }, 400);
   });
 
   setStep(1);
 });
+
+// Toast function
+function showToast(message, duration = 5000) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  // Clear previous class
+  toast.classList.remove("show", "hide");
+
+  // Set message
+  toast.textContent = message;
+
+  // Show
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  // Hide after duration
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hide");
+  }, duration);
+}
 
 // ===== Supabase Shared State (giữ nguyên) =====
 (function () {

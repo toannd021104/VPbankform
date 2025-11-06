@@ -67,11 +67,64 @@ document.addEventListener("DOMContentLoaded", function () {
         setStep(stepNumber);
       }
     }
+
+    if (e.target.closest("#clearBtn")) {
+      // Blur form area (không blur toast)
+      document.querySelector("main").style.filter = "blur(2px)";
+
+      // Reset form
+      form.reset();
+      form.querySelectorAll("textarea").forEach((el) => (el.value = ""));
+      form.querySelectorAll("select").forEach((el) => {
+        if (el.querySelector('option[value=""]')) el.value = "";
+      });
+      if (interactionDateField)
+        interactionDateField.value = new Date().toISOString().split("T")[0];
+      if (interactionTimeField) {
+        const now = new Date();
+        interactionTimeField.value = `${String(now.getHours()).padStart(
+          2,
+          "0"
+        )}:${String(now.getMinutes()).padStart(2, "0")}`;
+      }
+      handleFollowUp();
+
+      // Quay lại step 1
+      setStep(1);
+
+      // Remove blur sau 0.4 giây
+      setTimeout(() => {
+        document.querySelector("main").style.filter = "none";
+      }, 400);
+
+      // Đồng bộ Supabase
+      document.dispatchEvent(new Event("change", { bubbles: true }));
+    }
   });
 
-  // Submit ngay lập tức, không chặn, không hỏi
-  form.addEventListener("submit", () => {
-    // cho phép submit mặc định
+  // Submit ngay lập tức, hiển thị Toast
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Hiển thị Toast
+    showToast("✓ Cập nhật thành công");
+
+    // Blur form area (không blur toast)
+    document.querySelector("main").style.filter = "blur(2px)";
+
+    // Reset form ngay
+    form.reset();
+
+    // Quay lại step 1 ngay
+    setStep(1);
+
+    // Remove blur sau 0.4 giây
+    setTimeout(() => {
+      document.querySelector("main").style.filter = "none";
+    }, 400);
+
+    // Đồng bộ Supabase
+    document.dispatchEvent(new Event("change", { bubbles: true }));
   });
 
   // Wire follow-up event
@@ -81,6 +134,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
   setStep(1);
 });
+
+// Toast function
+function showToast(message, duration = 5000) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  // Clear previous class
+  toast.classList.remove("show", "hide");
+
+  // Set message
+  toast.textContent = message;
+
+  // Show
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  // Hide after duration
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hide");
+  }, duration);
+}
 
 // ===== Supabase Shared State =====
 (function () {
@@ -225,7 +301,7 @@ document.addEventListener("DOMContentLoaded", function () {
     saveTimer = setTimeout(upsertNow, SAVE_MS);
   }
 
-  // Wire events
+  // Wire events - input/change trigger Supabase sync
   form.addEventListener("input", schedule, true);
   form.addEventListener(
     "change",
@@ -236,15 +312,11 @@ document.addEventListener("DOMContentLoaded", function () {
     true
   );
 
-  // Submit = không post đâu cả, chỉ log & ensure save
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    schedule();
-    console.log("[CRM] submit payload:", serializeForm());
-  });
-
-  // Clear = reset UI + wipe DB (no modal)
+  // Clear = reset UI + wipe DB (no modal), blur 0.4s
   clearBtn?.addEventListener("click", async () => {
+    // Blur form area (không blur toast)
+    document.querySelector("main").style.filter = "blur(2px)";
+
     form.reset();
 
     // Reset về step 1
@@ -290,6 +362,11 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     last = Date.now();
     isLocal = false;
+
+    // Remove blur sau 0.4 giây
+    setTimeout(() => {
+      document.querySelector("main").style.filter = "none";
+    }, 400);
   });
 
   // Realtime sync

@@ -266,7 +266,9 @@
           </div>
 
           <div class="form-actions form-actions--final">
-            <!-- Bỏ nút Xóa Form -->
+            <button type="button" class="btn btn-neutral" id="clearBtn">
+              Xóa Form
+            </button>
             <button type="button" class="btn btn-neutral wizard-prev">
               Quay lại
             </button>
@@ -335,6 +337,9 @@
         slot.addEventListener("change", (e) => apply(e.target.value));
       })();
     </script>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
 
     <!-- Logic gốc (wizard + Supabase realtime) -->
     <script src="script.js"></script>

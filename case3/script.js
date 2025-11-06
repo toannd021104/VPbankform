@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (e.target.closest("#clearBtn")) {
+      // Blur form area (không blur toast)
+      document.querySelector("main").style.filter = "blur(2px)";
+
       form.reset();
       form.querySelectorAll("textarea").forEach((el) => (el.value = ""));
       form.querySelectorAll("select").forEach((el) => {
@@ -62,20 +65,40 @@ document.addEventListener("DOMContentLoaded", function () {
       if (submissionDateField)
         submissionDateField.value = new Date().toISOString().split("T")[0];
       setStep(1);
+
+      // Remove blur sau 0.4 giây
+      setTimeout(() => {
+        document.querySelector("main").style.filter = "none";
+      }, 400);
+
       // Đồng bộ Supabase (nếu có) — phát sự kiện change để các listener khác bắt được
       document.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
 
-  // Submit ngay lập tức, không chặn, không hỏi
+  // Submit ngay lập tức, hiển thị Toast
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     console.log("Submitting HR request:", getFormData(form));
-    showAlert("Đơn đã được gửi thành công!", "success");
+
+    // Hiển thị Toast
+    showToast("✓ Nộp đơn thành công");
+
+    // Blur form area (không blur toast)
+    document.querySelector("main").style.filter = "blur(2px)";
+
     form.reset();
     setStep(1);
     if (submissionDateField)
       submissionDateField.value = new Date().toISOString().split("T")[0];
+
+    // Remove blur sau 0.4 giây
+    setTimeout(() => {
+      document.querySelector("main").style.filter = "none";
+    }, 400);
+
+    // Đồng bộ Supabase
+    document.dispatchEvent(new Event("change", { bubbles: true }));
   });
 
   // Request type change handler
@@ -121,6 +144,29 @@ document.addEventListener("DOMContentLoaded", function () {
   setStep(1);
 });
 
+// Toast function
+function showToast(message, duration = 5000) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  // Clear previous class
+  toast.classList.remove("show", "hide");
+
+  // Set message
+  toast.textContent = message;
+
+  // Show
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  // Hide after duration
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hide");
+  }, duration);
+}
+
 // Helper functions
 function showAlert(message, type) {
   console.log(`${type}: ${message}`);
@@ -145,6 +191,18 @@ function getFormData(form) {
     }
   }
   return formData;
+}
+
+// ===== Toast Notification =====
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.remove("hide");
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hide");
+  }, 5000);
 }
 
 // ===== Supabase Shared State =====
