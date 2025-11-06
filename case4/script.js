@@ -56,10 +56,54 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Submit ngay lập tức, không chặn, không hỏi
-  form.addEventListener("submit", () => {
-    // cho phép submit mặc định
+  // Submit ngay lập tức, hiển thị Toast
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Hiển thị Toast
+    showToast("✓ Báo cáo đã được gửi");
+
+    // Blur form area (không blur toast)
+    document.querySelector("main").style.filter = "blur(2px)";
+
+    // Reset form ngay
+    form.reset();
+
+    // Quay lại step 1 ngay
+    setStep(1);
+    toggleDeps();
+
+    // Remove blur sau 0.4 giây
+    setTimeout(() => {
+      document.querySelector("main").style.filter = "none";
+    }, 400);
+
+    // Đồng bộ Supabase
+    document.dispatchEvent(new Event("change", { bubbles: true }));
   });
+
+  // Clear button handler
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      // Blur form area (không blur toast)
+      document.querySelector("main").style.filter = "blur(2px)";
+
+      // Reset form
+      form.reset();
+
+      // Quay lại step 1
+      setStep(1);
+      toggleDeps();
+
+      // Remove blur sau 0.4 giây
+      setTimeout(() => {
+        document.querySelector("main").style.filter = "none";
+      }, 400);
+
+      // Đồng bộ Supabase
+      document.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  }
 
   // Wire UI dependency events
   form.addEventListener("change", (e) => {
@@ -70,6 +114,29 @@ document.addEventListener("DOMContentLoaded", function () {
   setStep(1);
   toggleDeps();
 });
+
+// Toast function
+function showToast(message, duration = 5000) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  // Clear previous class
+  toast.classList.remove("show", "hide");
+
+  // Set message
+  toast.textContent = message;
+
+  // Show
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  // Hide after duration
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.classList.add("hide");
+  }, duration);
+}
 
 // ===== Supabase Shared State =====
 (function () {
@@ -230,36 +297,6 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     schedule();
     console.log("[Compliance] submit payload:", serializeForm());
-  });
-
-  // Clear = reset UI + wipe DB (no modal)
-  clearBtn?.addEventListener("click", async () => {
-    form.reset();
-
-    // ép trống các ô hay bị tự nhớ bởi trình duyệt
-    [
-      "submissionDate",
-      "reportingPeriod",
-      "reportId",
-      "department",
-      "highRiskCases",
-    ].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.value = "";
-    });
-    toggleDeps();
-
-    try {
-      isLocal = true;
-    } catch {}
-    await sb
-      .from(TABLE)
-      .upsert(
-        { id: ROW_ID, data: {}, updated_at: new Date().toISOString() },
-        { onConflict: "id" }
-      );
-    last = Date.now();
-    isLocal = false;
   });
 
   // Realtime sync
