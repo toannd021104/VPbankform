@@ -34,8 +34,9 @@
 
 ### Thêm URLs vào file `.env`
 ````bash
-LOAN_FORM_URL=https://vpbank-shared-form-fastdeploy.vercel.app/
-CRM_FORM_URL=https://case2-ten.vercel.app/
-HR_FORM_URL=https://case3-seven.vercel.app/
-COMPLIANCE_FORM_URL=https://case4-beta.vercel.app/
-OPERATIONS_FORM_URL=https://case5-chi.vercel.app/
+LOAN_FORM_URL=https://case1-three.vercel.app/
+CRM_FORM_URL=https://case2-theta.vercel.app/
+HR_FORM_URL=https://case3-orcin.vercel.app/
+COMPLIANCE_FORM_URL=https://case4-omega.vercel.app/
+OPERATIONS_FORM_URL=https://case5-hazel.vercel.app/
+
