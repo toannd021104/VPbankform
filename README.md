@@ -8,11 +8,11 @@
 
 | STT | Tên Form | Mô tả | Link Demo |
 |-----|----------|-------|-----------|
-| 1 | 🏠 **Vay vốn** | Đăng ký vay mua nhà, xe, tiêu dùng | [Xem](https://vpbank-shared-form-fastdeploy.vercel.app/) |
-| 2 | 👤 **Cập Nhật CRM** | Ghi nhận, cập nhật thông tin & tương tác KH	 | [Xem](https://case2-ten.vercel.app/) |
-| 3 | 💼 **Đơn Nội Bộ HR** | Gửi yêu cầu nội bộ: nghỉ phép, công tác, xác nhận	 | [Xem](https://case3-seven.vercel.app/) |
-| 4 | 📊 **Báo Cáo Tuân Thủ** | Báo cáo sự cố, vi phạm, đề xuất cải tiến	 | [Xem](https://case4-beta.vercel.app/) |
-| 5 | ⚙️ **Xác Thực Giao Dịch** | Xử lý, xác thực các giao dịch vận hành	 | [Xem](https://case5-chi.vercel.app/) |
+| 1 | 🏠 **Vay vốn** | Đăng ký vay mua nhà, xe, tiêu dùng | [Xem](https://case1-three.vercel.app/) |
+| 2 | 👤 **Cập Nhật CRM** | Ghi nhận, cập nhật thông tin & tương tác KH	 | [Xem](https://case2-theta.vercel.app/) |
+| 3 | 💼 **Đơn Nội Bộ HR** | Gửi yêu cầu nội bộ: nghỉ phép, công tác, xác nhận	 | [Xem](https://case3-orcin.vercel.app/) |
+| 4 | 📊 **Báo Cáo Tuân Thủ** | Báo cáo sự cố, vi phạm, đề xuất cải tiến	 | [Xem](https://case4-omega.vercel.app/) |
+| 5 | ⚙️ **Xác Thực Giao Dịch** | Xử lý, xác thực các giao dịch vận hành	 | [Xem](https://case5-hazel.vercel.app/) |
 
 ---
 
